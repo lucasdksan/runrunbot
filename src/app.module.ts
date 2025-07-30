@@ -1,16 +1,14 @@
-import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
-import { EnvConfigModule } from "./shared/infrastructure/env-config/env-config.module";
 import { NecordModule } from "necord";
-import { EnvConfigService } from "./shared/infrastructure/env-config/env-config.service";
+import { Module } from "@nestjs/common";
 import { IntentsBitField } from "discord.js";
-import { DiscordModule } from "./bots/discord/discord.module";
+import { EnvConfigModule } from "./shared/infrastructure/env-config/env-config.module";
+import { EnvConfigService } from "./shared/infrastructure/env-config/env-config.service";
+import { DatabaseModule } from "./shared/infrastructure/database/database.module";
 
 @Module({
   imports: [
     EnvConfigModule,
-    DiscordModule,
+    DatabaseModule,
     NecordModule.forRootAsync({
       imports: [EnvConfigModule],
       inject: [EnvConfigService],
@@ -25,7 +23,7 @@ import { DiscordModule } from "./bots/discord/discord.module";
       }),
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
-export class AppModule { }
+export class AppModule { };
