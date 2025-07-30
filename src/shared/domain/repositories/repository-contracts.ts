@@ -1,4 +1,4 @@
-import { Entity } from "src/shared/domain/entity/entity";
+import { Entity } from "../entity/entity";
 
 export interface RepositoryInterface<E extends Entity> {
     insert(entity: E): Promise<void>;

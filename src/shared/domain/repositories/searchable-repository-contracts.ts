@@ -1,4 +1,4 @@
-import { Entity } from "src/shared/domain/entity/entity";
+import { Entity } from "../entity/entity";
 import { RepositoryInterface } from "./repository-contracts";
 
 export type SortDirection = "asc" | "desc";

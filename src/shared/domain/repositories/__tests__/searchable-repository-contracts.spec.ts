@@ -1,4 +1,4 @@
-import { Entity } from "src/shared/domain/entity/entity";
+import { Entity } from "../../entity/entity";
 import { SearchParams, SearchResult } from "../searchable-repository-contracts";
 
 describe("Searchable Repository unit Test", () => {
