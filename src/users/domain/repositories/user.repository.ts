@@ -10,5 +10,6 @@ export namespace UserRepository {
 
     export interface Repository extends SearchableRepositoryInterface<UserEntity, Filter, SearchParams, SearchResult> {
         findByDiscordUser(discordUser: string): Promise<UserEntity>;
+        findByRunrunitUser(runrunitUser: string): Promise<UserEntity>;
     };
 }

@@ -10,6 +10,17 @@ export class UserSqliteRepository implements UserRepository.Repository {
     constructor(
         private sqliteService: SqliteService,
     ) { }
+    
+    async findByRunrunitUser(runrunitUser: string): Promise<UserEntity> {
+        const row = await this.sqliteService.connection.get(
+            `SELECT * FROM users WHERE runrunitUser = ?`,
+            runrunitUser
+        );
+
+        if (!row) throw new NotFoundError("User not found.");
+
+        return UserModelMapper.toEntity(row);
+    }
 
     async findByDiscordUser(discordUser: string): Promise<UserEntity> {
         const row = await this.sqliteService.connection.get(
