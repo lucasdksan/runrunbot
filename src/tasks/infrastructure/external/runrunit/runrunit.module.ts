@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { RunrunitService } from "./runrunit.service";
-import { EnvConfigService } from "../../../../shared/infrastructure/env-config/env-config.service";
+import { EnvConfigModule } from "../../../../shared/infrastructure/env-config/env-config.module";
 
 @Module({
-    imports: [EnvConfigService],
+    imports: [EnvConfigModule],
     providers: [RunrunitService],
     exports: [RunrunitService]
 })

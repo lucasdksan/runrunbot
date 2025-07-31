@@ -1,13 +1,15 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { validateSync } from "class-validator";
 import { EnvConfigService } from "../../../../shared/infrastructure/env-config/env-config.service";
 import { RunrunitTaskMapper } from "./models/task-model.mapper";
 import { GetTaskDto } from "./dtos/get-task.dto";
 import { GetDescriptionTaskDto } from "./dtos/get-description-task.dto";
 import { CreateCommentDto } from "./dtos/create-comment.dto";
+import { IRunrunitRepository } from "./repositories/i-runrunit-repository";
+import { PauseTaskDto } from "./dtos/pause-task.dto";
 
 @Injectable()
-export class RunrunitService {
+export class RunrunitService implements IRunrunitRepository {
     private readonly baseUrl = "https://runrun.it/api/v1.0";
 
     constructor(
@@ -34,7 +36,7 @@ export class RunrunitService {
 
     public async getTask(dto: GetTaskDto) {
         const errors = validateSync(dto);
-        
+
         if (errors.length > 0) {
             throw new Error("Dados inválidos para getTask");
         }
@@ -63,11 +65,11 @@ export class RunrunitService {
 
     public async getDescriptionTask(dto: GetDescriptionTaskDto): Promise<string> {
         const errors = validateSync(dto);
-        
+
         if (errors.length > 0) {
             throw new Error("Dados inválidos para getDescriptionTask");
         }
-        
+
         try {
             const response = await fetch(`${this.baseUrl}/tasks/${dto.id}/description`, {
                 headers: this.getHeader(),
@@ -87,11 +89,11 @@ export class RunrunitService {
 
     public async createComment(dto: CreateCommentDto): Promise<void> {
         const errors = validateSync(dto);
-        
+
         if (errors.length > 0) {
             throw new Error("Dados inválidos para getDescriptionTask");
         }
-        
+
         try {
             const response = await fetch(`${this.baseUrl}/comments`, {
                 method: "POST",
@@ -108,6 +110,44 @@ export class RunrunitService {
         } catch (error) {
             console.error(`Erro em createComment(${dto.taskId}):`, error);
             throw error;
+        }
+    }
+
+    public async pauseTask(dto: PauseTaskDto): Promise<void> {
+        const errors = validateSync(dto);
+
+        if (errors.length > 0) {
+            errors.map((err) => {
+                console.log("Err: ", err.toString())
+            })
+            throw new BadRequestException({
+                message: "Dados inválidos para pauseTask",
+                errors: errors.map((e) => ({
+                    property: e.property,
+                    constraints: e.constraints,
+                })),
+            });
+        }
+
+        try {
+            const response = await fetch(`${this.baseUrl}/tasks/${dto.id}/pause`, {
+                method: "POST",
+                headers: this.getHeader(),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new HttpException(
+                    `Falha ao pausar task com id ${dto.id}. Status: ${response.status}. ${errorText}`,
+                    response.status as HttpStatus
+                );
+            }
+        } catch (error) {
+            console.error(`Erro em pauseTask(${dto.id}):`, error);
+            throw new HttpException(
+                `Erro interno ao pausar a task ${dto.id}`,
+                HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
     }
 
