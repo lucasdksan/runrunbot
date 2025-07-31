@@ -4,11 +4,15 @@ import { IntentsBitField } from "discord.js";
 import { EnvConfigModule } from "./shared/infrastructure/env-config/env-config.module";
 import { EnvConfigService } from "./shared/infrastructure/env-config/env-config.service";
 import { DatabaseModule } from "./shared/infrastructure/database/database.module";
+import { UserModule } from "./users/infrastructure/user.module";
+import { TaskModule } from "./tasks/infrastructure/task.module";
 
 @Module({
   imports: [
     EnvConfigModule,
     DatabaseModule,
+    UserModule,
+    TaskModule,
     NecordModule.forRootAsync({
       imports: [EnvConfigModule],
       inject: [EnvConfigService],

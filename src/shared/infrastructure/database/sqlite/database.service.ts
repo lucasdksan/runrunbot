@@ -13,7 +13,7 @@ export class SqliteService implements OnModuleInit, OnModuleDestroy {
         });
 
         await this.db.exec(`
-            CREATE TABLE users (
+            CREATE TABLE IF NOT EXISTS users (
                 id TEXT PRIMARY KEY,
                 discordUser TEXT NOT NULL,
                 runrunitUser TEXT NOT NULL,

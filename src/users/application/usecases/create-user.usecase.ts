@@ -3,6 +3,7 @@ import { UseCase as DefaultUseCase } from "../../../shared/application/usecases/
 import { UserRepository } from "../../domain/repositories/user.repository";
 import { BadRequestError } from "../../../shared/application/errors/bad-request-error";
 import { UserEntity } from "../../domain/entities/user.entity";
+import { NotFoundError } from "../../../shared/domain/errors/not-found-error";
 
 export namespace CreateUser {
     export type Input = {
@@ -22,8 +23,10 @@ export namespace CreateUser {
 
             if(!discordUser || !runrunitUser ) throw new BadRequestError("Input data not provided");
 
-            await this.userRepository.findByDiscordUser(discordUser);
-            await this.userRepository.findByRunrunitUser(runrunitUser);
+            const discordUserExist = this.userRepository.discordUserExist(discordUser);
+            const runrunitUserExist = this.userRepository.runrunitUserExist(runrunitUser);
+
+            if(!discordUserExist || !runrunitUserExist) throw new NotFoundError("Input data not provided");
 
             const entity = new UserEntity({
                 discordUser,
