@@ -1,6 +1,7 @@
 import { NecordModule } from "necord";
-import { Module } from "@nestjs/common";
 import { IntentsBitField } from "discord.js";
+import { Module } from "@nestjs/common";
+import { McpModule } from "@nestjs-mcp/server";
 import { EnvConfigModule } from "./shared/infrastructure/env-config/env-config.module";
 import { EnvConfigService } from "./shared/infrastructure/env-config/env-config.service";
 import { DatabaseModule } from "./shared/infrastructure/database/database.module";
@@ -25,6 +26,10 @@ import { TaskModule } from "./tasks/infrastructure/task.module";
           IntentsBitField.Flags.MessageContent,
         ],
       }),
+    }),
+    McpModule.forRoot({
+      name: "AG.N1 MCP",
+      version: "0.0.1",
     }),
   ],
   controllers: [],
