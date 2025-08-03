@@ -1,0 +1,57 @@
+import { Injectable } from "@nestjs/common";
+import { GenerateContentConfig, GoogleGenAI, ToolListUnion } from "@google/genai";
+import { EnvConfigService } from "../../../../shared/infrastructure/env-config/env-config.service";
+import { IIARepository } from "./repositories/i-ia-repository";
+
+@Injectable()
+export class IAService implements IIARepository {
+    private ai: GoogleGenAI;
+    private readonly model = "gemini-2.0-flash";
+    private readonly tools: ToolListUnion = [
+        { googleSearch: {} }
+    ];
+    private readonly config: GenerateContentConfig = {
+        tools: this.tools,
+        systemInstruction: [
+            { text: "" }
+        ]
+    };
+
+    constructor(
+        private readonly envConfigService: EnvConfigService,
+    ) {
+        this.ai = new GoogleGenAI({
+            apiKey: this.envConfigService.getGeminiApiKey(),
+        });
+    }
+
+    async generateResult(input: string): Promise<string> {
+        const contents = [
+            {
+                role: "user",
+                parts: [{ text: input }],
+            },
+        ];
+
+        try {
+            const response = await this.ai.models.generateContentStream({
+                model: this.model,
+                contents,
+                config: this.config,
+            });
+
+            let resultText = "";
+
+            for await (const chunk of response) {
+                if (chunk.text) {
+                    resultText += chunk.text;
+                }
+            }
+
+            return resultText.trim() || "Sem resposta da IA.";
+        } catch (error) {
+            console.error("Erro ao gerar conteúdo com a IA: ", error);
+            throw new Error("Falha ao gerar resposta da IA.");
+        }
+    }
+}

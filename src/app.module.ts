@@ -10,7 +10,7 @@ import { TaskModule } from "./tasks/infrastructure/task.module";
 
 @Module({
   imports: [
-    EnvConfigModule,
+    EnvConfigModule.forRoot(),
     DatabaseModule,
     UserModule,
     TaskModule,

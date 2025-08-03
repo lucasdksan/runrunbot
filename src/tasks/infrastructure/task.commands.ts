@@ -1,8 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { Message } from "discord.js";
-import { Context, On } from "necord";
+import { ActionRowBuilder, Message, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import { Context, Modal, ModalContext, On, SlashCommand, SlashCommandContext } from "necord";
 import { StartWork } from "../application/usecases/start-work.usecase";
 import { EndWork } from "../application/usecases/end-work.usecase";
+import { EstimateHours } from "../application/usecases/estimate-hours.usecase";
 
 @Injectable()
 export class TaskCommands {
@@ -11,6 +12,9 @@ export class TaskCommands {
 
     @Inject(EndWork.Usecase)
     private endWorkUsecase: EndWork.Usecase;
+
+    @Inject(EstimateHours.Usecase)
+    private estimateHoursUsecase: EstimateHours.Usecase;
 
     @On("messageCreate")
     public async onStartWork(@Context() [message]: [Message]) {
@@ -47,6 +51,49 @@ export class TaskCommands {
             } catch (err) {
                 console.error(`Não consegui enviar DM para ${message.author.tag}:`, err);
             }
+        }
+    }
+
+    @SlashCommand({
+        name: "estimate",
+        description: "Estimar horas de uma tarefa usando IA.",
+    })
+    public async onEstimate(@Context() [interaction]: SlashCommandContext) {
+        const modal = new ModalBuilder()
+            .setTitle("Estimar horas da tarefa")
+            .setCustomId("estimate")
+            .addComponents([
+                new ActionRowBuilder<TextInputBuilder>().addComponents(
+                    new TextInputBuilder()
+                        .setCustomId("description")
+                        .setLabel("Digite a descrição")
+                        .setStyle(TextInputStyle.Paragraph)
+                        .setRequired(true)
+                ),
+            ]);
+
+        return interaction.showModal(modal);
+    }
+
+    @Modal("estimate")
+    public async onEstimateModal(@Context() [interaction]: ModalContext){
+        const description = interaction.fields.getTextInputValue("description");
+
+        try {
+            await interaction.reply({ content: "Isso pode levar alguns minutos", flags: 1 << 6 });
+
+            const response = await this.estimateHoursUsecase.execute({ text: description });
+
+            return interaction.followUp({
+                content: response.message,
+                flags: 1 << 6,
+            });
+        } catch (error) {
+            console.error("Erro ao estimar as horas: ", error);
+            return interaction.followUp({
+                content: "Erro ao estimar",
+                flags: 1 << 6,
+            });
         }
     }
 }

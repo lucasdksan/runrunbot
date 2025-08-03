@@ -6,6 +6,10 @@ import { EnvConfig } from "./env-config.interface";
 export class EnvConfigService implements EnvConfig {
     constructor(private readonly configService: ConfigService){}
     
+    getGeminiApiKey(): string {
+        return this.configService.get<string>("GEMINI_API_KEY") || "";
+    }
+    
     getRunrunAppKey(): string {
         return this.configService.get<string>("RUNRUN_APP_KEY") || "";
     }

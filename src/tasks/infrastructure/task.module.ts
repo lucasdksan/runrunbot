@@ -10,9 +10,13 @@ import { IRunrunitRepository } from "./external/runrunit/repositories/i-runrunit
 import { RunrunitService } from "./external/runrunit/runrunit.service";
 import { EndWork } from "../application/usecases/end-work.usecase";
 import { TaskTools } from "./task.tools";
+import { IAModule } from "./external/ia/ia.module";
+import { EstimateHours } from "../application/usecases/estimate-hours.usecase";
+import { IIARepository } from "./external/ia/repositories/i-ia-repository";
+import { IAService } from "./external/ia/ia.service";
 
 @Module({
-    imports: [RunrunitModule, McpModule.forFeature()],
+    imports: [RunrunitModule, McpModule.forFeature(), IAModule],
     providers: [
         {
             provide: "SqliteService",
@@ -38,6 +42,11 @@ import { TaskTools } from "./task.tools";
                 runrunitRepo: IRunrunitRepository,
             ) => new EndWork.Usecase(useRepository, runrunitRepo),
             inject: ["UserRepository", RunrunitService]
+        },
+        {
+            provide: EstimateHours.Usecase,
+            useFactory: (iaRepo: IIARepository) => new EstimateHours.Usecase(iaRepo),
+            inject: [IAService],
         },
         TaskCommands,
         {
