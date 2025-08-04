@@ -1,10 +1,14 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import { ActionRowBuilder, Message, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { Context, Modal, ModalContext, On, SlashCommand, SlashCommandContext } from "necord";
+import { plainToInstance } from "class-transformer";
+import { validate } from "class-validator";
 import { StartWork } from "../application/usecases/start-work.usecase";
 import { EndWork } from "../application/usecases/end-work.usecase";
 import { EstimateHours } from "../application/usecases/estimate-hours.usecase";
 import { EstimateTask } from "../application/usecases/estimate-task.usecase";
+import { EstimateDto } from "./dtos/estimate.dto";
+import { EstimateTaskDto } from "./dtos/estimate-task.dto";
 
 @Injectable()
 export class TaskCommands {
@@ -81,12 +85,18 @@ export class TaskCommands {
 
     @Modal("estimate")
     public async onEstimateModal(@Context() [interaction]: ModalContext) {
-        const description = interaction.fields.getTextInputValue("description");
-
         try {
+            const description = interaction.fields.getTextInputValue("description");
+            const dto = plainToInstance(EstimateDto, { text: description });
+            const errors = await validate(dto);
+
+            if (errors.length > 0) {
+                throw new BadRequestException("Dados inválidos no formulário.");
+            }
+
             await interaction.reply({ content: "Isso pode levar alguns minutos", flags: 1 << 6 });
 
-            const response = await this.estimateHoursUsecase.execute({ text: description });
+            const response = await this.estimateHoursUsecase.execute(dto);
 
             return interaction.followUp({
                 content: response.message,
@@ -124,12 +134,18 @@ export class TaskCommands {
 
     @Modal("estimate_task")
     public async onEstimateTaskModal(@Context() [interaction]: ModalContext) {
-        const taskId = interaction.fields.getTextInputValue("taskId");
-
         try {
+            const taskId = interaction.fields.getTextInputValue("taskId");
+            const dto = plainToInstance(EstimateTaskDto, { taskId: parseInt(taskId) });
+            const errors = await validate(dto);
+
+            if (errors.length > 0) {
+                throw new BadRequestException("Dados inválidos no formulário.");
+            }
+
             await interaction.reply({ content: "Isso pode levar alguns minutos.\nVou procurar a tarefa.", flags: 1 << 6 });
 
-            const response = await this.estimateTaskUsecase.execute({ taskId: parseInt(taskId) });
+            const response = await this.estimateTaskUsecase.execute(dto);
 
             return interaction.followUp({
                 content: response.message,

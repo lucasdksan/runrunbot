@@ -7,7 +7,6 @@ import { GetDescriptionTaskDto } from "./dtos/get-description-task.dto";
 import { CreateCommentDto } from "./dtos/create-comment.dto";
 import { IRunrunitRepository } from "./repositories/i-runrunit-repository";
 import { PauseTaskDto } from "./dtos/pause-task.dto";
-import { TaskEntity } from "../../../domain/entities/task.entity";
 
 @Injectable()
 export class RunrunitService implements IRunrunitRepository {
