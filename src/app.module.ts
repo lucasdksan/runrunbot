@@ -1,16 +1,19 @@
-import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
-import { EnvConfigModule } from "./shared/infrastructure/env-config/env-config.module";
 import { NecordModule } from "necord";
-import { EnvConfigService } from "./shared/infrastructure/env-config/env-config.service";
 import { IntentsBitField } from "discord.js";
-import { DiscordModule } from "./bots/discord/discord.module";
+import { Module } from "@nestjs/common";
+import { McpModule } from "@nestjs-mcp/server";
+import { EnvConfigModule } from "./shared/infrastructure/env-config/env-config.module";
+import { EnvConfigService } from "./shared/infrastructure/env-config/env-config.service";
+import { DatabaseModule } from "./shared/infrastructure/database/database.module";
+import { UserModule } from "./users/infrastructure/user.module";
+import { TaskModule } from "./tasks/infrastructure/task.module";
 
 @Module({
   imports: [
-    EnvConfigModule,
-    DiscordModule,
+    EnvConfigModule.forRoot(),
+    DatabaseModule,
+    UserModule,
+    TaskModule,
     NecordModule.forRootAsync({
       imports: [EnvConfigModule],
       inject: [EnvConfigService],
@@ -24,8 +27,12 @@ import { DiscordModule } from "./bots/discord/discord.module";
         ],
       }),
     }),
+    McpModule.forRoot({
+      name: "AG.N1 MCP",
+      version: "0.0.1",
+    }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
-export class AppModule { }
+export class AppModule { };

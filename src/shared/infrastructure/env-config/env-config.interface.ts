@@ -4,4 +4,5 @@ export interface EnvConfig {
     getDiscordToken(): string;
     getRunrunAppKey(): string;
     getRunrunUserToken(): string;
+    getGeminiApiKey(): string;
 }
