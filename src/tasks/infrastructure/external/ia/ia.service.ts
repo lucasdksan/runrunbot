@@ -6,7 +6,7 @@ import { IIARepository } from "./repositories/i-ia-repository";
 @Injectable()
 export class IAService implements IIARepository {
     private ai: GoogleGenAI;
-    private readonly model = "gemini-2.0-flash";
+    private readonly model = "gemini-2.5-pro";
     private readonly tools: ToolListUnion = [
         { googleSearch: {} }
     ];

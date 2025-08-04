@@ -5,7 +5,7 @@ import { TaskValidatorFactory } from "../validators/task.validator";
 export type AssignmentsType = {
     assignee_id: string;
     assignee_name: string;
-    start_date: string;
+    start_date?: string;
 };
 
 export type TaskProps = {
@@ -71,6 +71,23 @@ export class TaskEntity extends Entity<TaskProps> {
         return this.props.is_working_on;
     }
 
+    public formatDescription() {
+        if (!this.description) return "";
+
+        let text = this.description.replace(/<br\s*\/?>/gi, "\n");
+
+        text = text.replace(/<b>(.*?)<\/b>/gi, "**$1**");
+        text = text.replace(/<a[^>]+href="([^"]+)"[^>]*>(.*?)<\/a>/gi, "$1");
+        text = text.replace(/<\/?[^>]+(>|$)/g, "");
+        text = text.replace(/\n\s+\n/g, "\n\n").trim();
+
+        if (text.length > 1900) {
+            text = text.slice(0, 1900) + "\n... [mensagem truncada]";
+        }
+
+        return text;
+    }
+
     static validate(props: TaskProps) {
         const validator = TaskValidatorFactory.create();
         const isValid = validator.validate(props);
@@ -80,7 +97,11 @@ export class TaskEntity extends Entity<TaskProps> {
         }
     }
 
-    static taskOngoing(runrunitUser: string, tasks: any[]){
+    static getQuotationBoardTasks(tasks: any[]) {
+        return tasks.filter((task) => task.board_id === 544220);
+    }
+
+    static taskOngoing(runrunitUser: string, tasks: any[]) {
         return tasks.filter((task) => {
             const stageMatch =
                 task.board_stage_name === "Ongoing"

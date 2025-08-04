@@ -7,6 +7,7 @@ import { GetDescriptionTaskDto } from "./dtos/get-description-task.dto";
 import { CreateCommentDto } from "./dtos/create-comment.dto";
 import { IRunrunitRepository } from "./repositories/i-runrunit-repository";
 import { PauseTaskDto } from "./dtos/pause-task.dto";
+import { TaskEntity } from "../../../domain/entities/task.entity";
 
 @Injectable()
 export class RunrunitService implements IRunrunitRepository {
@@ -54,8 +55,17 @@ export class RunrunitService implements IRunrunitRepository {
             const [taskData, descData] = await Promise.all([taskRes.json(), descRes.json()]);
 
             return RunrunitTaskMapper.toEntity({
-                ...taskData,
-                description: descData.description,
+                assignments: taskData.assignments.map((assignment) => ({
+                    assignee_id: assignment.assignee_id,
+                    assignee_name: assignment.assignee_name,
+                    start_date: assignment.start_date ?? "",
+                })),
+                board_stage_name: taskData.board_stage_name,
+                is_working_on: taskData.is_working_on,
+                task_tags: taskData.task_tags,
+                title: taskData.title,
+                description: descData.description, 
+                id: taskData.id
             });
         } catch (error) {
             console.error("Erro ao buscar tarefa:", error);

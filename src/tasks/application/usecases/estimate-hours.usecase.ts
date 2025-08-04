@@ -19,11 +19,13 @@ export namespace EstimateHours {
         async execute(input: Input): Promise<Output> {
             const { text } = input;
             const response = await this.iaRepo.generateResult(`
-                Estime em horas o tempo necessário para fazer a seguinte tarefa considerando 1 hora de gordura.
+                Estime em horas o tempo necessário para fazer a seguinte tarefa.
                 ${text}
 
-                Observação 1: RETORNE APENAS A HORAS SEM DESCRIÇÃO.
-                Observação 2: LEIA DE FORMA MINUCIOSA OS SEGUINTES COMANDOS -> ${EstimateTaskAgentText()}
+                É de extrema importância o seu retorno não passar dos 1500 caracteres.
+
+                **Observação 1:** **NÃO GERE MAIS DE 1500 CARACTERES**.
+                **Observação 2:** **LEIA DE FORMA MINUCIOSA OS SEGUINTES COMANDOS** -> ${EstimateTaskAgentText()}
             `);
 
             return {

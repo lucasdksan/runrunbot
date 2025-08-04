@@ -4,6 +4,7 @@ import { Context, Modal, ModalContext, On, SlashCommand, SlashCommandContext } f
 import { StartWork } from "../application/usecases/start-work.usecase";
 import { EndWork } from "../application/usecases/end-work.usecase";
 import { EstimateHours } from "../application/usecases/estimate-hours.usecase";
+import { EstimateTask } from "../application/usecases/estimate-task.usecase";
 
 @Injectable()
 export class TaskCommands {
@@ -15,6 +16,9 @@ export class TaskCommands {
 
     @Inject(EstimateHours.Usecase)
     private estimateHoursUsecase: EstimateHours.Usecase;
+
+    @Inject(EstimateTask.Usecase)
+    private estimateTaskUsecase: EstimateTask.Usecase;
 
     @On("messageCreate")
     public async onStartWork(@Context() [message]: [Message]) {
@@ -76,7 +80,7 @@ export class TaskCommands {
     }
 
     @Modal("estimate")
-    public async onEstimateModal(@Context() [interaction]: ModalContext){
+    public async onEstimateModal(@Context() [interaction]: ModalContext) {
         const description = interaction.fields.getTextInputValue("description");
 
         try {
@@ -92,6 +96,49 @@ export class TaskCommands {
             console.error("Erro ao estimar as horas: ", error);
             return interaction.followUp({
                 content: "Erro ao estimar",
+                flags: 1 << 6,
+            });
+        }
+    }
+
+    @SlashCommand({
+        name: "estimate_task",
+        description: "Estimar as horas de uma tarefa registrada."
+    })
+    public async onEstimateTask(@Context() [interaction]: SlashCommandContext) {
+        const modal = new ModalBuilder()
+            .setTitle("Cotação da tarefa")
+            .setCustomId("estimate_task")
+            .addComponents([
+                new ActionRowBuilder<TextInputBuilder>().addComponents(
+                    new TextInputBuilder()
+                        .setCustomId("taskId")
+                        .setLabel("Digite o id da tarefa")
+                        .setStyle(TextInputStyle.Short)
+                        .setRequired(true)
+                ),
+            ]);
+
+        return interaction.showModal(modal);
+    }
+
+    @Modal("estimate_task")
+    public async onEstimateTaskModal(@Context() [interaction]: ModalContext) {
+        const taskId = interaction.fields.getTextInputValue("taskId");
+
+        try {
+            await interaction.reply({ content: "Isso pode levar alguns minutos.\nVou procurar a tarefa.", flags: 1 << 6 });
+
+            const response = await this.estimateTaskUsecase.execute({ taskId: parseInt(taskId) });
+
+            return interaction.followUp({
+                content: response.message,
+                flags: 1 << 6,
+            });
+        } catch (error) {
+            console.error("Erro ao estimar as horas: ", error);
+            return interaction.followUp({
+                content: "Erro ao estimar tarefa",
                 flags: 1 << 6,
             });
         }

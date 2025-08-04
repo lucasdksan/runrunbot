@@ -3,12 +3,8 @@ import {
     IsNotEmpty,
     IsOptional,
     IsString,
-    MaxLength,
-    ValidateNested,
     ArrayNotEmpty,
-    IsISO8601,
 } from "class-validator";
-import { Type } from "class-transformer";
 import { ClassValidatorFields } from "../../../shared/domain/validators/class-validator-fields";
 import { TaskProps } from "../entities/task.entity";
 
@@ -21,13 +17,8 @@ class AssignmentRules {
     @IsNotEmpty()
     assignee_name: string;
 
-    @IsISO8601()
-    @IsNotEmpty()
-    start_date: string;
-
-    @IsString()
-    @IsNotEmpty()
-    board_stage_name: string;
+    @IsOptional()
+    start_date?: string;
 
     constructor(props: AssignmentRules) {
         Object.assign(this, props);
@@ -40,20 +31,19 @@ export class TaskRules {
     @IsString({ each: true })
     task_tags: string[];
 
-    @MaxLength(255)
     @IsString()
     @IsNotEmpty()
     title: string;
 
-    @IsArray()
-    @ArrayNotEmpty()
-    @ValidateNested({ each: true })
-    @Type(() => AssignmentRules)
     assignments: AssignmentRules[];
 
     @IsOptional()
     @IsString()
     description?: string;
+
+    @IsString()
+    @IsNotEmpty()
+    board_stage_name: string;
 
     constructor(props: TaskProps) {
         Object.assign(this, props);

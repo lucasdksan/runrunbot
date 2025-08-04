@@ -14,6 +14,7 @@ import { IAModule } from "./external/ia/ia.module";
 import { EstimateHours } from "../application/usecases/estimate-hours.usecase";
 import { IIARepository } from "./external/ia/repositories/i-ia-repository";
 import { IAService } from "./external/ia/ia.service";
+import { EstimateTask } from "../application/usecases/estimate-task.usecase";
 
 @Module({
     imports: [RunrunitModule, McpModule.forFeature(), IAModule],
@@ -47,6 +48,14 @@ import { IAService } from "./external/ia/ia.service";
             provide: EstimateHours.Usecase,
             useFactory: (iaRepo: IIARepository) => new EstimateHours.Usecase(iaRepo),
             inject: [IAService],
+        },
+        {
+            provide: EstimateTask.Usecase,
+            useFactory: (
+                iaRepo: IIARepository, 
+                runrunitRepo: IRunrunitRepository
+            ) => new EstimateTask.Usecase(iaRepo, runrunitRepo),
+            inject: [IAService, RunrunitService],
         },
         TaskCommands,
         {
