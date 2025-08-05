@@ -1,12 +1,12 @@
 import { NecordModule } from "necord";
 import { IntentsBitField } from "discord.js";
-import { Module } from "@nestjs/common";
-import { McpModule } from "@nestjs-mcp/server";
+import { Module } from "@nestjs/common"; 
 import { EnvConfigModule } from "./shared/infrastructure/env-config/env-config.module";
 import { EnvConfigService } from "./shared/infrastructure/env-config/env-config.service";
 import { DatabaseModule } from "./shared/infrastructure/database/database.module";
 import { UserModule } from "./users/infrastructure/user.module";
 import { TaskModule } from "./tasks/infrastructure/task.module";
+import { McpModule } from "@nestjs-mcp/server";
 
 @Module({
   imports: [
@@ -30,8 +30,11 @@ import { TaskModule } from "./tasks/infrastructure/task.module";
     McpModule.forRoot({
       name: "AG.N1 MCP",
       version: "0.0.1",
+      instructions: "MCP to provide task descriptions for AI agents",
+      logging: { level: "log", enabled: true },
+      transports: { sse: { enabled: true } },
     }),
-  ],
+  ],  
   controllers: [],
   providers: [],
 })
