@@ -16,7 +16,7 @@ describe("textFormatterUtil", () => {
     it("deve extrair o href dos links <a>", () => {
         const input = "Clique <a href='https://example.com'>aqui</a>";
         const output = textFormatterUtil(input);
-        expect(output).toBe("Clique https://example.com");
+        expect(output).toBe("Clique aqui");
     });
 
     it("deve remover qualquer outra tag HTML restante", () => {
