@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { GenerateContentConfig, GoogleGenAI, ToolListUnion } from "@google/genai";
 import { EnvConfigService } from "../../../../shared/infrastructure/env-config/env-config.service";
 import { IIARepository } from "./repositories/i-ia-repository";
+import { DefaultInputDto } from "./dto/default-input.dto";
+import { validateSync } from "class-validator";
 
 @Injectable()
 export class IAService implements IIARepository {
@@ -25,15 +27,21 @@ export class IAService implements IIARepository {
         });
     }
 
-    async generateResult(input: string): Promise<string> {
-        const contents = [
-            {
-                role: "user",
-                parts: [{ text: input }],
-            },
-        ];
-
+    async generateResult(dto: DefaultInputDto): Promise<string> {
         try {
+            const errors = validateSync(dto);
+            
+            if (errors.length > 0) {
+                throw new Error("Dados inválidos para getTask");
+            }
+
+            const contents = [
+                {
+                    role: "user",
+                    parts: [{ text: dto.input }],
+                },
+            ];
+            
             const response = await this.ai.models.generateContentStream({
                 model: this.model,
                 contents,

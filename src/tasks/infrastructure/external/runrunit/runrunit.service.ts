@@ -7,7 +7,6 @@ import { GetDescriptionTaskDto } from "./dtos/get-description-task.dto";
 import { CreateCommentDto } from "./dtos/create-comment.dto";
 import { IRunrunitRepository } from "./repositories/i-runrunit-repository";
 import { PauseTaskDto } from "./dtos/pause-task.dto";
-import { TaskEntity } from "../../../domain/entities/task.entity";
 
 @Injectable()
 export class RunrunitService implements IRunrunitRepository {
@@ -97,7 +96,7 @@ export class RunrunitService implements IRunrunitRepository {
         }
     }
 
-    public async createComment(dto: CreateCommentDto): Promise<void> {
+    public async createComment(dto: CreateCommentDto): Promise<string> {
         const errors = validateSync(dto);
 
         if (errors.length > 0) {
@@ -117,6 +116,8 @@ export class RunrunitService implements IRunrunitRepository {
             if (!response.ok) {
                 throw new Error(`Erro ao criar comentário para a tarefa ${dto.taskId}. Status: ${response.status}`);
             }
+
+            return "Enviado com sucesso!";
         } catch (error) {
             console.error(`Erro em createComment(${dto.taskId}):`, error);
             throw error;

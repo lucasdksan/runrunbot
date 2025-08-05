@@ -3,15 +3,14 @@ import { UseCase as DefaultUseCase } from "../../../shared/application/usecases/
 import { UserRepository } from "../../../users/domain/repositories/user.repository";
 import { TaskEntity } from "../../domain/entities/task.entity";
 import { IRunrunitRepository } from "../../infrastructure/external/runrunit/repositories/i-runrunit-repository";
+import { DefaultOutput, DefaultOutputMapper } from "../dtos/default-output.dto";
 
 export namespace StartWork {
     export type Input = {
         discordUser: string;
     };
 
-    export type Output = {
-        message: string;
-    };
+    export type Output = DefaultOutput;
 
     export class Usecase implements DefaultUseCase<Input, Output> {
         constructor(
@@ -34,9 +33,7 @@ export namespace StartWork {
             const tasksFiltered = TaskEntity.filterTasks(entity.runrunitUser, tasks);
             const message = tasksFiltered.map(task => `* ID: ${task.id}, Título: [${task.title}](https://runrun.it/pt-BR/tasks/${task.id}), Etapa: ${task.board_stage_name}`).join('\n');
 
-            return {
-                message
-            };
+            return DefaultOutputMapper.toOutput(message);
         }
     }
 };

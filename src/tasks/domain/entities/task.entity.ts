@@ -1,6 +1,7 @@
 import { Entity } from "../../../shared/domain/entity/entity";
 import { EntityValidationError } from "../../../shared/domain/errors/validation-error";
 import { TaskValidatorFactory } from "../validators/task.validator";
+import { textFormatterUtil } from "./utils/text-formatter.util";
 
 export type AssignmentsType = {
     assignee_id: string;
@@ -74,18 +75,11 @@ export class TaskEntity extends Entity<TaskProps> {
     public formatDescription() {
         if (!this.description) return "";
 
-        let text = this.description.replace(/<br\s*\/?>/gi, "\n");
+        return textFormatterUtil(this.description);
+    }
 
-        text = text.replace(/<b>(.*?)<\/b>/gi, "**$1**");
-        text = text.replace(/<a[^>]+href="([^"]+)"[^>]*>(.*?)<\/a>/gi, "$1");
-        text = text.replace(/<\/?[^>]+(>|$)/g, "");
-        text = text.replace(/\n\s+\n/g, "\n\n").trim();
-
-        if (text.length > 1900) {
-            text = text.slice(0, 1900) + "\n... [mensagem truncada]";
-        }
-
-        return text;
+    static publicFormatText(value: string){
+        return textFormatterUtil(value);
     }
 
     static validate(props: TaskProps) {

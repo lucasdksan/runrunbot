@@ -8,6 +8,6 @@ export interface IRunrunitRepository {
     getAllTasks(): Promise<any[]>;
     getTask(dto: GetTaskDto): Promise<TaskEntity>;
     getDescriptionTask(dto: GetDescriptionTaskDto): Promise<string>;
-    createComment(dto: CreateCommentDto): Promise<void>;
+    createComment(dto: CreateCommentDto): Promise<string>;
     pauseTask(dto: PauseTaskDto): Promise<void>;
 }

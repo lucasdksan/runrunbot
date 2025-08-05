@@ -4,6 +4,7 @@ import { UserRepository } from "../../../users/domain/repositories/user.reposito
 import { TaskEntity } from "../../domain/entities/task.entity";
 import { PauseTaskDto } from "../../infrastructure/external/runrunit/dtos/pause-task.dto";
 import { IRunrunitRepository } from "../../infrastructure/external/runrunit/repositories/i-runrunit-repository";
+import { DefaultOutput, DefaultOutputMapper } from "../dtos/default-output.dto";
 
 export namespace EndWork {
     export type Input = {
@@ -11,9 +12,7 @@ export namespace EndWork {
         userInput: string;
     };
 
-    export type Output = {
-        message: string;
-    };
+    export type Output = DefaultOutput;
 
     export class Usecase implements DefaultUseCase<Input, Output> {
         constructor(
@@ -44,9 +43,7 @@ export namespace EndWork {
                 })
             );
 
-            return {
-                message: `Pausei todas suas tarefa.\n${input.userInput.toLowerCase() === "encerrando" ? "Boa noite!" : "Bom almoço!"}`
-            };
+            return DefaultOutputMapper.toOutput(`Pausei todas suas tarefa.\n${input.userInput.toLowerCase() === "encerrando" ? "Boa noite!" : "Bom almoço!"}`);
         }
     }
 };
