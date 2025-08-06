@@ -1,7 +1,7 @@
 import { Entity } from "../../../shared/domain/entity/entity";
 import { EntityValidationError } from "../../../shared/domain/errors/validation-error";
+import { TurndownProvider } from "../../infrastructure/providers/turndown/turndown.provider";
 import { TaskValidatorFactory } from "../validators/task.validator";
-import { textFormatterUtil } from "./utils/text-formatter.util";
 
 export type AssignmentsType = {
     assignee_id: string;
@@ -75,11 +75,9 @@ export class TaskEntity extends Entity<TaskProps> {
     public formatDescription() {
         if (!this.description) return "";
 
-        return textFormatterUtil(this.description);
-    }
+        const turndown = new TurndownProvider();
 
-    static publicFormatText(value: string){
-        return textFormatterUtil(value);
+        return turndown.convertHTMLtoMD(this.description);
     }
 
     static validate(props: TaskProps) {

@@ -23,7 +23,7 @@ export class TaskTools {
 
         const description = await this.runrunitRepo.getDescriptionTask(dto);
 
-        return { content: [{ type: "text", text: TaskEntity.publicFormatText(description) }] };
+        return { content: [{ type: "text", text: description }] };
     }
 
     @Tool({
