@@ -80,6 +80,12 @@ export class TaskEntity extends Entity<TaskProps> {
         return turndown.convertHTMLtoMD(this.description);
     }
 
+    static publicFormatDescription(value: string){
+        const turndown = new TurndownProvider();
+
+        return turndown.convertHTMLtoMD(value);
+    }
+
     static validate(props: TaskProps) {
         const validator = TaskValidatorFactory.create();
         const isValid = validator.validate(props);

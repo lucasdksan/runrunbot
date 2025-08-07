@@ -6,7 +6,7 @@ Bot de discord que faz integração ao runrun.it
 
 ## Descrição
 
-Este projeto consiste no desenvolvimento de um bot inteligente para auxiliar na gestão de empresas, integrando-se à plataforma Runrun.it. O bot é capaz de interagir com o sistema para automatizar tarefas, acompanhar atividades e gerar contações automáticas com o apoio de inteligência artificial, utilizando como base as descrições das tarefas cadastradas.
+Este projeto consiste no desenvolvimento de um bot inteligente para auxiliar na gestão de empresas, integrando-se à plataforma Runrun.it. O bot é capaz de interagir com o sistema para automatizar tarefas, acompanhar atividades e gerar contações automáticas com o apoio de inteligência artificial, utilizando como base as descrições das tarefas cadastradas. Além disso, o sistema possui um MCP que faz integração ao Runrun.it.
 
 Clone the project
 
@@ -41,6 +41,21 @@ All new commit
 ```bash
   git commit -m 'edit type - commitTitle'
 ```
+
+## MCP
+
+```json
+"AG.N1 MCP":{
+  "type": "sse",
+  "url": "http://localhost:3000/sse"
+}
+```
+
+> Insira esta configuração no seu arquivo mcp.json para acessar o mcp.
+
+* O MCP possui duas ferramentas:
+  * get_description: Responsável por obter a descrição da tarefa a partir do ID da tarefa publicado no chat.
+  * send_comment: Envia um comentário sobre a tarefa. Requer o ID da tarefa e o comentário.
 
 ## Edit Type
 
