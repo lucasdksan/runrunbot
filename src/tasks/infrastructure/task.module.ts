@@ -15,6 +15,8 @@ import { EstimateHours } from "../application/usecases/estimate-hours.usecase";
 import { IIARepository } from "./external/ia/repositories/i-ia-repository";
 import { IAService } from "./external/ia/ia.service";
 import { EstimateTask } from "../application/usecases/estimate-task.usecase";
+import { PlayTask } from "../application/usecases/play-task.usecase";
+import { PauseTask } from "../application/usecases/pause-task.usecase";
 
 @Module({
     imports: [RunrunitModule, McpModule.forFeature(), IAModule],
@@ -43,6 +45,20 @@ import { EstimateTask } from "../application/usecases/estimate-task.usecase";
                 runrunitRepo: IRunrunitRepository,
             ) => new EndWork.Usecase(useRepository, runrunitRepo),
             inject: ["UserRepository", RunrunitService]
+        },
+        {
+            provide: PlayTask.Usecase,
+            useFactory:(
+                runrunitRepo: IRunrunitRepository,
+            ) => new PlayTask.Usecase(runrunitRepo),
+            inject: [RunrunitService]
+        },
+        {
+            provide: PauseTask.Usecase,
+            useFactory:(
+                runrunitRepo: IRunrunitRepository,
+            ) => new PauseTask.Usecase(runrunitRepo),
+            inject: [RunrunitService]
         },
         {
             provide: EstimateHours.Usecase,

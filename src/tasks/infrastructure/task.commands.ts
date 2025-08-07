@@ -9,6 +9,10 @@ import { EstimateHours } from "../application/usecases/estimate-hours.usecase";
 import { EstimateTask } from "../application/usecases/estimate-task.usecase";
 import { EstimateDto } from "./dtos/estimate.dto";
 import { EstimateTaskDto } from "./dtos/estimate-task.dto";
+import { PlayTask } from "../application/usecases/play-task.usecase";
+import { PlayTaskDto } from "./external/runrunit/dtos/play-task.dto";
+import { PauseTaskDto } from "./external/runrunit/dtos/pause-task.dto";
+import { PauseTask } from "../application/usecases/pause-task.usecase";
 
 @Injectable()
 export class TaskCommands {
@@ -23,6 +27,12 @@ export class TaskCommands {
 
     @Inject(EstimateTask.Usecase)
     private estimateTaskUsecase: EstimateTask.Usecase;
+
+    @Inject(PlayTask.Usecase)
+    private playTaskUsecase: PlayTask.Usecase;
+
+    @Inject(PauseTask.Usecase)
+    private pauseTaskUsecase: PauseTask.Usecase;
 
     @On("messageCreate")
     public async onStartWork(@Context() [message]: [Message]) {
@@ -59,6 +69,104 @@ export class TaskCommands {
             } catch (err) {
                 console.error(`Não consegui enviar DM para ${message.author.tag}:`, err);
             }
+        }
+    }
+
+    @SlashCommand({
+        name: "play_task",
+        description: "Iniciar a tarefa"
+    })
+    public async onPlayTask(@Context() [interaction]: SlashCommandContext) {
+        const modal = new ModalBuilder()
+            .setTitle("Inicar tarefa")
+            .setCustomId("play_task")
+            .addComponents([
+                new ActionRowBuilder<TextInputBuilder>().addComponents(
+                    new TextInputBuilder()
+                        .setCustomId("taskId")
+                        .setLabel("Digite o id da tarefa")
+                        .setStyle(TextInputStyle.Short)
+                        .setRequired(true)
+                ),
+            ]);
+
+        return interaction.showModal(modal);
+    }
+
+    @Modal("play_task")
+    public async onPlayTaskModal(@Context() [interaction]: ModalContext) {
+        try {
+            const taskId = interaction.fields.getTextInputValue("taskId");
+            const dto = plainToInstance(PlayTaskDto, { id: parseInt(taskId) });
+            const errors = await validate(dto);
+
+            if (errors.length > 0) {
+                throw new BadRequestException("Dados inválidos no formulário.");
+            }
+
+            await interaction.reply({ content: "Isso pode levar alguns minutos.\nVou procurar a tarefa.", flags: 1 << 6 });
+
+            await this.playTaskUsecase.execute(dto);
+
+            return interaction.followUp({
+                content: "Tarefa iniciada",
+                flags: 1 << 6,
+            });
+        } catch (error) {
+            console.error("Erro ao estimar as horas: ", error);
+            return interaction.followUp({
+                content: "Erro ao estimar tarefa",
+                flags: 1 << 6,
+            });
+        }
+    }
+
+    @SlashCommand({
+        name: "pause_task",
+        description: "Iniciar a tarefa"
+    })
+    public async onPauseTask(@Context() [interaction]: SlashCommandContext) {
+        const modal = new ModalBuilder()
+            .setTitle("Pausar tarefa")
+            .setCustomId("pause_task")
+            .addComponents([
+                new ActionRowBuilder<TextInputBuilder>().addComponents(
+                    new TextInputBuilder()
+                        .setCustomId("taskId")
+                        .setLabel("Digite o id da tarefa")
+                        .setStyle(TextInputStyle.Short)
+                        .setRequired(true)
+                ),
+            ]);
+
+        return interaction.showModal(modal);
+    }
+
+    @Modal("pause_task")
+    public async onPauseTaskModal(@Context() [interaction]: ModalContext) {
+        try {
+            const taskId = interaction.fields.getTextInputValue("taskId");
+            const dto = plainToInstance(PauseTaskDto, { id: parseInt(taskId) });
+            const errors = await validate(dto);
+
+            if (errors.length > 0) {
+                throw new BadRequestException("Dados inválidos no formulário.");
+            }
+
+            await interaction.reply({ content: "Isso pode levar alguns minutos.\nVou procurar a tarefa.", flags: 1 << 6 });
+
+            await this.pauseTaskUsecase.execute(dto);
+
+            return interaction.followUp({
+                content: "Tarefa pausada",
+                flags: 1 << 6,
+            });
+        } catch (error) {
+            console.error("Erro ao estimar as horas: ", error);
+            return interaction.followUp({
+                content: "Erro ao estimar tarefa",
+                flags: 1 << 6,
+            });
         }
     }
 

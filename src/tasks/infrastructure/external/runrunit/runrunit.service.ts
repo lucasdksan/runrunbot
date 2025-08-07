@@ -7,6 +7,7 @@ import { GetDescriptionTaskDto } from "./dtos/get-description-task.dto";
 import { CreateCommentDto } from "./dtos/create-comment.dto";
 import { IRunrunitRepository } from "./repositories/i-runrunit-repository";
 import { PauseTaskDto } from "./dtos/pause-task.dto";
+import { PlayTaskDto } from "./dtos/play-task.dto";
 
 @Injectable()
 export class RunrunitService implements IRunrunitRepository {
@@ -63,7 +64,7 @@ export class RunrunitService implements IRunrunitRepository {
                 is_working_on: taskData.is_working_on,
                 task_tags: taskData.task_tags,
                 title: taskData.title,
-                description: descData.description, 
+                description: descData.description,
                 id: taskData.id
             });
         } catch (error) {
@@ -142,6 +143,44 @@ export class RunrunitService implements IRunrunitRepository {
 
         try {
             const response = await fetch(`${this.baseUrl}/tasks/${dto.id}/pause`, {
+                method: "POST",
+                headers: this.getHeader(),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new HttpException(
+                    `Falha ao pausar task com id ${dto.id}. Status: ${response.status}. ${errorText}`,
+                    response.status as HttpStatus
+                );
+            }
+        } catch (error) {
+            console.error(`Erro em pauseTask(${dto.id}):`, error);
+            throw new HttpException(
+                `Erro interno ao pausar a task ${dto.id}`,
+                HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    public async playTask(dto: PlayTaskDto): Promise<void> {
+        const errors = validateSync(dto);
+
+        if (errors.length > 0) {
+            errors.map((err) => {
+                console.log("Err: ", err.toString())
+            })
+            throw new BadRequestException({
+                message: "Dados inválidos para pauseTask",
+                errors: errors.map((e) => ({
+                    property: e.property,
+                    constraints: e.constraints,
+                })),
+            });
+        }
+
+        try {
+            const response = await fetch(`${this.baseUrl}/tasks/${dto.id}/play`, {
                 method: "POST",
                 headers: this.getHeader(),
             });

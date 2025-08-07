@@ -28,16 +28,32 @@ export namespace EstimateTask {
             const entity = await this.runrunitRepo.getTask(dto);
             const message = entity.formatDescription();
             const dtoInput = new DefaultInputDto();
-            
+
             dtoInput.input = `
                 Estime em horas o tempo necessário para fazer a seguinte tarefa.
                 ${message}
 
-                **Observação 2:** **NÃO GERE MAIS DE 2000 CARACTERES**.
+                **Observação 1:** **NÃO GERE MAIS DE 2000 CARACTERES**.
+                **Observação 2:** **TENHA MENOS DE 2000 CARACTERES NA SUA RESPOSTA**.
                 **Observação 3:** **LEIA DE FORMA MINUCIOSA OS SEGUINTES COMANDOS** -> ${EstimateTaskAgentText()}
             `;
-            
-            const result = await this.iaRepo.generateResult(dtoInput);
+
+            let result = await this.iaRepo.generateResult(dtoInput);
+
+            if (result.length > 2000) {
+                const retryInput = new DefaultInputDto();
+                
+                retryInput.input = `
+                    O resultado anterior ultrapassou o limite de 2000 caracteres.
+
+                    Por favor, RESUMA o conteúdo mantendo a estimativa de horas e respeitando o limite de **2000 caracteres** no total.
+
+                    Resultado anterior:
+                    ${result}
+                `;
+
+                result = await this.iaRepo.generateResult(retryInput);
+            }
 
             return DefaultOutputMapper.toOutput(result);
         }

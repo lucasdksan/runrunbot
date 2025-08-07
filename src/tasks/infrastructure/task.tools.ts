@@ -3,8 +3,10 @@ import { CallToolResult } from "@modelcontextprotocol/sdk/types";
 import { Resolver, Tool } from "@nestjs-mcp/server";
 import { IRunrunitRepository } from "./external/runrunit/repositories/i-runrunit-repository";
 import { GetDescriptionTaskDto } from "./external/runrunit/dtos/get-description-task.dto";
-import { TaskEntity } from "../domain/entities/task.entity";
 import { CreateCommentDto } from "./external/runrunit/dtos/create-comment.dto";
+import { PauseTaskDto } from "./external/runrunit/dtos/pause-task.dto";
+import { PlayTaskDto } from "./external/runrunit/dtos/play-task.dto";
+import { TaskEntity } from "../domain/entities/task.entity";
 
 @Resolver("tasks")
 export class TaskTools {
@@ -21,9 +23,13 @@ export class TaskTools {
         const dto = new GetDescriptionTaskDto();
         dto.id = parseInt(taskId);
 
-        const description = await this.runrunitRepo.getDescriptionTask(dto);
+        try {
+            const description = await this.runrunitRepo.getDescriptionTask(dto);
 
-        return { content: [{ type: "text", text: TaskEntity.publicFormatText(description) }] };
+            return { content: [{ type: "text", text: TaskEntity.publicFormatDescription(description) }] };
+        } catch (error) {
+            return { content: [{ type: "text", text: "Erro em pegar a descrição." }] };
+        }
     }
 
     @Tool({
@@ -37,8 +43,50 @@ export class TaskTools {
         dto.taskId = parseInt(taskId);
         dto.comment = comment;
 
-        const text = await this.runrunitRepo.createComment(dto);
+        try {
+            const text = await this.runrunitRepo.createComment(dto);
 
-        return { content: [{ type: "text", text }] };
+            return { content: [{ type: "text", text }] };
+        } catch (error) {
+            return { content: [{ type: "text", text: "Error ao comentar"}] };
+        }
+    }
+
+    @Tool({
+        name: "play_task",
+        description: "This tool allows user start the task card by simply submitting the taskID",
+        paramsSchema: { taskId: z.string() }
+    })
+    async playTask({ taskId }:{ taskId: string }){
+        const dto = new PlayTaskDto();
+
+        dto.id = parseInt(taskId);
+
+        try {
+            await this.runrunitRepo.playTask(dto);
+
+            return { content: [{ type: "text", text: "Tarefa iniciada" }] };
+        } catch (error) {
+            return { content: [{ type: "text", text: "Erro ao iniciar tarefa" }] };
+        }
+    }
+
+    @Tool({
+        name: "pause_task",
+        description: "This tool allows user pause the task card by simply submitting the taskID",
+        paramsSchema: { taskId: z.string() }
+    })
+    async pauseTask({ taskId }:{ taskId: string }){
+        const dto = new PauseTaskDto();
+
+        dto.id = parseInt(taskId);
+
+        try {
+            await this.runrunitRepo.pauseTask(dto);
+
+            return { content: [{ type: "text", text: "Tarefa pausada" }] };
+        } catch (error) {
+            return { content: [{ type: "text", text: "Erro ao pausar tarefa" }] };
+        }
     }
 }
