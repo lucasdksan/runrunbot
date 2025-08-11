@@ -19,9 +19,12 @@ export type TaskProps = {
 };
 
 export class TaskEntity extends Entity<TaskProps> {
+    private turndown: TurndownProvider;
+
     constructor(public readonly props: TaskProps, id?: string) {
         TaskEntity.validate(props);
         super(props, id);
+        this.turndown = new TurndownProvider();
     }
 
     private set board_stage_name(value: string) {
@@ -75,9 +78,7 @@ export class TaskEntity extends Entity<TaskProps> {
     public formatDescription() {
         if (!this.description) return "";
 
-        const turndown = new TurndownProvider();
-
-        return turndown.convertHTMLtoMD(this.description);
+        return this.turndown.convertHTMLtoMD(this.description);
     }
 
     static publicFormatDescription(value: string){

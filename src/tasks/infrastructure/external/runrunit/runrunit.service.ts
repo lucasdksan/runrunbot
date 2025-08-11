@@ -8,6 +8,8 @@ import { CreateCommentDto } from "./dtos/create-comment.dto";
 import { IRunrunitRepository } from "./repositories/i-runrunit-repository";
 import { PauseTaskDto } from "./dtos/pause-task.dto";
 import { PlayTaskDto } from "./dtos/play-task.dto";
+import { GetCommentTaskDto } from "./dtos/get-comment-task.dto";
+import { CommentProps, RunrunitCommentsMapper } from "./models/comments-model.mapper";
 
 @Injectable()
 export class RunrunitService implements IRunrunitRepository {
@@ -16,6 +18,33 @@ export class RunrunitService implements IRunrunitRepository {
     constructor(
         private readonly envConfigService: EnvConfigService,
     ) { }
+    
+    async getCommentTask(dto: GetCommentTaskDto): Promise<CommentProps[]> {
+        const errors = validateSync(dto);
+
+        if (errors.length > 0) {
+            throw new Error("Dados inválidos para getDescriptionTask");
+        }
+
+        try {
+            const response = await fetch(`${this.baseUrl}/tasks/${dto.id}/comments`, {
+                headers: this.getHeader(),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro ao buscar os comentários da tarefa ${dto.id}. Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if(!Array.isArray(data)) throw new Error(`Erro ao buscar os comentários da tarefa ${dto.id}. Status: ${response.status}`);
+
+            return RunrunitCommentsMapper.toCommentArray(data);
+        } catch (error) {
+            console.error(`Erro em getCommentTask(${dto.id}):`, error);
+            throw error;
+        }
+    }
 
     public async getAllTasks(): Promise<any[]> {
         try {
@@ -90,6 +119,7 @@ export class RunrunitService implements IRunrunitRepository {
             }
 
             const data = await response.json();
+            
             return data.description;
         } catch (error) {
             console.error(`Erro em getDescriptionTask(${dto.id}):`, error);
