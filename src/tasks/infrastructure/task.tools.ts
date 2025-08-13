@@ -7,6 +7,8 @@ import { CreateCommentDto } from "./external/runrunit/dtos/create-comment.dto";
 import { PauseTaskDto } from "./external/runrunit/dtos/pause-task.dto";
 import { PlayTaskDto } from "./external/runrunit/dtos/play-task.dto";
 import { TaskEntity } from "../domain/entities/task.entity";
+import { GetCommentTaskDto } from "./external/runrunit/dtos/get-comment-task.dto";
+import { TurndownProvider } from "./providers/turndown/turndown.provider";
 
 @Resolver("tasks")
 export class TaskTools {
@@ -20,14 +22,31 @@ export class TaskTools {
         paramsSchema: { taskId: z.string() },
     })
     async getDescription({ taskId }: { taskId: string; }): Promise<CallToolResult> {
+        const turndown = new TurndownProvider();
         const dto = new GetDescriptionTaskDto();
+        const dtoComment = new GetCommentTaskDto();
+
         dto.id = parseInt(taskId);
+        dtoComment.id = parseInt(taskId);
 
         try {
             const description = await this.runrunitRepo.getDescriptionTask(dto);
+            const comments = await this.runrunitRepo.getCommentTask(dtoComment);
+            const commentFormat = comments.map(comment => {
+                return `${comment.user_id}: ${turndown.convertHTMLtoMD(comment.text)}\n`;
+            }).join("");
 
-            return { content: [{ type: "text", text: TaskEntity.publicFormatDescription(description) }] };
+            return { 
+                content: [{ 
+                    type: "text", text: `
+                        Descrição: ${TaskEntity.publicFormatDescription(description)} \n
+                        Comentário: ${commentFormat}
+                    `
+                }] 
+            };
         } catch (error) {
+            console.log(error);
+
             return { content: [{ type: "text", text: "Erro em pegar a descrição." }] };
         }
     }

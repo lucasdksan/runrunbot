@@ -14,8 +14,8 @@ describe("TaskEntity unit tests", () => {
 
     beforeEach(() => {
         TaskEntity.validate = jest.fn();
+        
         props = TaskDataBuilder({});
-
         sut = new TaskEntity(props);
     });
 
