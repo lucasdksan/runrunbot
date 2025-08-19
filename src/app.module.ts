@@ -1,19 +1,18 @@
 import { NecordModule } from "necord";
 import { IntentsBitField } from "discord.js";
 import { Module } from "@nestjs/common"; 
+import { McpModule } from "@nestjs-mcp/server";
+import { ScheduleModule } from "@nestjs/schedule";
 import { EnvConfigModule } from "./shared/infrastructure/env-config/env-config.module";
 import { EnvConfigService } from "./shared/infrastructure/env-config/env-config.service";
 import { DatabaseModule } from "./shared/infrastructure/database/database.module";
 import { UserModule } from "./users/infrastructure/user.module";
 import { TaskModule } from "./tasks/infrastructure/task.module";
-import { McpModule } from "@nestjs-mcp/server";
-
+import { ReminderModule } from "./reminders/infrastructure/reminder.module";
 @Module({
   imports: [
     EnvConfigModule.forRoot(),
     DatabaseModule,
-    UserModule,
-    TaskModule,
     NecordModule.forRootAsync({
       imports: [EnvConfigModule],
       inject: [EnvConfigService],
@@ -34,6 +33,10 @@ import { McpModule } from "@nestjs-mcp/server";
       logging: { level: "log", enabled: true },
       transports: { sse: { enabled: true } },
     }),
+    ScheduleModule.forRoot(),
+    UserModule,
+    TaskModule,
+    ReminderModule
   ],  
   controllers: [],
   providers: [],

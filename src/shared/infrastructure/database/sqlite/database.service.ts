@@ -20,6 +20,19 @@ export class SqliteService implements OnModuleInit, OnModuleDestroy {
                 createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
             );
         `);
+
+        await this.db.exec(`
+            CREATE TABLE IF NOT EXISTS reminders (
+                id TEXT PRIMARY KEY,
+                userId TEXT NOT NULL,
+                channelId TEXT,
+                message TEXT NOT NULL,
+                remindAt DATETIME NOT NULL,
+                sendTo TEXT NOT NULL CHECK(sendTo IN ('DM', 'CHANNEL')),
+                reminded BOOLEAN DEFAULT 0,
+                createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+        `);        
     }
 
     async onModuleDestroy() {

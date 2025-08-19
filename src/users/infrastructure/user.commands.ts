@@ -1,10 +1,10 @@
 import { BadRequestException, Inject, Injectable } from "@nestjs/common";
-import { CreateUser } from "../application/usecases/create-user.usecase";
 import { Context, Modal, ModalContext, SlashCommand, SlashCommandContext } from "necord";
 import { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
-import { CreateUserDto } from "./dtos/create-user.dto";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
+import { CreateUser } from "../application/usecases/create-user.usecase";
+import { CreateUserDto } from "./dtos/create-user.dto";
 
 @Injectable()
 export class UserCommands {
