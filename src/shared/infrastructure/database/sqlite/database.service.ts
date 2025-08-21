@@ -16,6 +16,7 @@ export class SqliteService implements OnModuleInit, OnModuleDestroy {
             CREATE TABLE IF NOT EXISTS users (
                 id TEXT PRIMARY KEY,
                 discordUser TEXT NOT NULL,
+                discordId TEXT NOT NULL,
                 runrunitUser TEXT NOT NULL,
                 createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
             );

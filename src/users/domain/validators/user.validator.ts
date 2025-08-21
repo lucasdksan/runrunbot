@@ -8,6 +8,9 @@ export class UserRules {
     @IsNotEmpty()
     discordUser: string;
 
+    @IsString()
+    @IsNotEmpty()
+    discordId: string;
 
     @MaxLength(100)
     @IsString()
@@ -18,8 +21,8 @@ export class UserRules {
     @IsOptional()
     createdAt?: Date;
 
-    constructor({ discordUser, runrunitUser, createdAt }: UserProps) {
-        Object.assign(this, { discordUser, runrunitUser, createdAt });
+    constructor({ discordUser, runrunitUser, discordId, createdAt }: UserProps) {
+        Object.assign(this, { discordUser, runrunitUser, discordId, createdAt });
     }
 }
 

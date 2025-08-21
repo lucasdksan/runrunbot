@@ -8,9 +8,13 @@ import { ReminderRepository } from "../domain/repositories/reminder.repository";
 import { ReminderCommands } from "./reminder.commands";
 import { ListReminder } from "../application/usecases/list-reminder.usecase";
 import { GetAllReminder } from "../application/usecases/get-all-reminder.usecase";
+import { EnvConfigModule } from "../../shared/infrastructure/env-config/env-config.module";
+import { ReminderSchedules } from "./reminder.schedules";
+import { GetUserReminder } from "../application/usecases/get-user-reminder.usecase";
+import { SendMessageReminder } from "../application/usecases/send-message-reminder.usecase";
 
 @Module({
-    imports: [],
+    imports: [EnvConfigModule],
     controllers: [],
     providers: [
         {
@@ -50,7 +54,22 @@ import { GetAllReminder } from "../application/usecases/get-all-reminder.usecase
             ) => new GetAllReminder.Usecase(reminderRepository),
             inject: ["ReminderRepository"]
         },
+        {
+            provide: GetUserReminder.Usecase,
+            useFactory: (
+                useRepository: UserRepository.Repository,
+            ) => new GetUserReminder.Usecase(useRepository),
+            inject: ["UserRepository"]
+        },
+        {
+            provide: SendMessageReminder.Usecase,
+            useFactory: (
+                useRepository: UserRepository.Repository,
+            ) => new SendMessageReminder.Usecase(useRepository),
+            inject: ["UserRepository"]
+        },
         ReminderCommands,
+        ReminderSchedules
     ],
     exports: [],
 })

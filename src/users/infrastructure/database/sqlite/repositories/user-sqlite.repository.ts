@@ -56,13 +56,14 @@ export class UserSqliteRepository implements UserRepository.Repository {
     }
 
     async insert(entity: UserEntity): Promise<void> {
-        const { id, discordUser, runrunitUser, createdAt } = entity.toJSON();
+        const { id, discordUser, runrunitUser, discordId, createdAt } = entity.toJSON();
 
         await this.sqliteService.connection.run(
-            `INSERT INTO users (id, discordUser, runrunitUser, createdAt) VALUES (?, ?, ?, ?)`,
+            `INSERT INTO users (id, discordUser, runrunitUser, discordId, createdAt) VALUES (?, ?, ?, ?, ?)`,
             id,
             discordUser,
             runrunitUser,
+            discordId,
             createdAt?.toISOString()
         );
     }
@@ -84,11 +85,11 @@ export class UserSqliteRepository implements UserRepository.Repository {
         );
     }
 
-    search(props: UserRepository.SearchParams): Promise<UserRepository.SearchResult> {
-        throw new Error("Method not implemented.");
+    async findById(id: string): Promise<UserEntity> {
+        return await this._get(id);
     }
 
-    findById(id: string): Promise<UserEntity> {
+    search(props: UserRepository.SearchParams): Promise<UserRepository.SearchResult> {
         throw new Error("Method not implemented.");
     }
 
@@ -114,6 +115,7 @@ export class UserSqliteRepository implements UserRepository.Repository {
             return new UserEntity({
                 discordUser: row.discordUser,
                 runrunitUser: row.runrunitUser,
+                discordId: row.discordId,
                 createdAt: new Date(row.createdAt),
             }, row.id);
         } catch (error) {

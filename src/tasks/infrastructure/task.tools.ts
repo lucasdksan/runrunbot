@@ -45,7 +45,7 @@ export class TaskTools {
                 }] 
             };
         } catch (error) {
-            console.log(error);
+            console.error(error);
 
             return { content: [{ type: "text", text: "Erro em pegar a descrição." }] };
         }

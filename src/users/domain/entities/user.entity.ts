@@ -4,6 +4,7 @@ import { UserValidatorFactory } from "../validators/user.validator";
 
 export type UserProps = {
     discordUser: string;
+    discordId: string;
     runrunitUser: string;
     createdAt?: Date;
 };
@@ -15,12 +16,16 @@ export class UserEntity extends Entity<UserProps> {
         this.props.createdAt = this.props.createdAt ?? new Date();
     }
 
-    update(values: Partial<Pick<UserProps, "discordUser" | "runrunitUser">>): void {
+    update(values: Partial<Pick<UserProps, "discordUser" | "runrunitUser" | "discordId">>): void {
         const newProps = { ...this.props, ...values };
         UserEntity.validate(newProps);
 
         if (values.discordUser !== undefined) {
             this.discordUser = values.discordUser;
+        }
+
+        if (values.discordId !== undefined) {
+            this.discordId = values.discordId;
         }
 
         if (values.runrunitUser !== undefined) {
@@ -30,6 +35,10 @@ export class UserEntity extends Entity<UserProps> {
 
     private set discordUser(value: string) {
         this.props.discordUser = value;
+    }
+
+    private set discordId(value: string) {
+        this.props.discordId = value;
     }
 
     private set runrunitUser(value: string) {
@@ -42,6 +51,10 @@ export class UserEntity extends Entity<UserProps> {
 
     get discordUser() {
         return this.props.discordUser;
+    }
+
+    get discordId() {
+        return this.props.discordId;
     }
 
     get createdAt() {

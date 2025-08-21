@@ -4,6 +4,7 @@ import { UserEntity } from "../../../../domain/entities/user.entity";
 export type UserModelMapperInput = {
     id: string;
     discordUser: string;
+    discordId: string;
     runrunitUser: string;
     createdAt: string;
 };
@@ -13,6 +14,7 @@ export class UserModelMapper {
         const data = {
             discordUser: model.discordUser,
             runrunitUser: model.runrunitUser,
+            discordId: model.discordId,
             createdAt: new Date(model.createdAt)
         };
 

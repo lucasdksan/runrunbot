@@ -9,6 +9,7 @@ export namespace CreateUser {
     export type Input = {
         discordUser: string;
         runrunitUser: string;
+        discordId: string;
     };
 
     export type Output = UserOutput;
@@ -19,7 +20,7 @@ export namespace CreateUser {
         ){}
         
         async execute(input: Input): Promise<UserOutput> {
-            const { discordUser, runrunitUser } = input;
+            const { discordUser, runrunitUser, discordId } = input;
 
             if(!discordUser || !runrunitUser ) throw new BadRequestError("Input data not provided");
 
@@ -30,7 +31,8 @@ export namespace CreateUser {
 
             const entity = new UserEntity({
                 discordUser,
-                runrunitUser
+                runrunitUser,
+                discordId
             });
             
             await this.userRepository.insert(entity);

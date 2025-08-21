@@ -3,6 +3,7 @@ import { UserEntity } from "../../domain/entities/user.entity";
 export type UserOutput = {
     id: string;
     discordUser: string;
+    discordId: string;
     runrunitUser: string;
     createdAt: Date;
 }

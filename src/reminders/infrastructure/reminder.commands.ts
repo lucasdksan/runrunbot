@@ -102,10 +102,18 @@ export class ReminderCommands {
                 throw new BadRequestException("Dados inválidos no formulário.");
             }
 
+            let print = "";
             const list = await this.listReminderUsecase.execute(dto);
 
+            list.forEach((reminder) => {
+                const remindDate = new Date(reminder.remindAt);
+                const remindString = `${remindDate.getDate()}/${remindDate.getMonth()+1}/${remindDate.getFullYear()}`;
+                
+                print = `${print} * ${remindString} - mensagem: ${reminder.message}\n`;
+            });
+
             return interaction.reply({
-                content: `Seus lembretes:\n${list.map((reminder)=>{let { message, remindAt } = reminder;return `* ${remindAt.toJSON().split("T")[0].replace("-", "/").replace("-", "/").split("/").reverse().join().replace(",", "/").replace(",", "/")} - mensagem: ${message}\n`;})}`,
+                content: `Seus lembretes:\n${print}`,
                 flags: 1 << 6,
             });
         } catch (error) {

@@ -31,6 +31,12 @@ describe("UserEntity unit tests", ()=>{
         expect(typeof sut.props.discordUser).toBe("string");
     });
 
+    it("Setter of discordId field", ()=>{
+        sut["discordId"] = "123456789";
+        expect(sut.discordId).toEqual("123456789");
+        expect(typeof sut.props.discordId).toBe("string");
+    });
+
     it("Setter of runrunitUser field", ()=>{
         sut["runrunitUser"] = "Other name";
         expect(sut.runrunitUser).toEqual("Other name");

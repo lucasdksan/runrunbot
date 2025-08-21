@@ -36,8 +36,9 @@ export class UserCommands {
     protected async registerModal(@Context() [interaction]: ModalContext) {
         try {
             const discordUser = interaction.user.username;
+            const discordId = interaction.user.id;
             const runrunitUser = interaction.fields.getTextInputValue("runrunitUser");
-            const dto = plainToInstance(CreateUserDto, { discordUser, runrunitUser });
+            const dto = plainToInstance(CreateUserDto, { discordUser, runrunitUser, discordId });
             const errors = await validate(dto);
 
             if (errors.length > 0) {
@@ -51,7 +52,7 @@ export class UserCommands {
                 flags: 1 << 6,
             });
         } catch (error) {
-            console.log(error);
+            console.error(error);
             
             return interaction.reply({
                 content: "Erro ao registrar usuário.",
