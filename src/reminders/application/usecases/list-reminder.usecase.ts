@@ -21,8 +21,9 @@ export namespace ListReminder {
             const userEntity = await this.userRepository.findByDiscordUser(discordUser);
             const { id: userId } = userEntity.toJSON();
             const reminders = await this.reminderRepository.findAllRemindersByUser(userId);
+            const reminderFiltered = reminders.filter((reminder) => !reminder.reminded);
 
-            return reminders.map((reminder) => ReminderOutputMapper.toOutput(reminder));
+            return reminderFiltered.map((reminder) => ReminderOutputMapper.toOutput(reminder));
         }
     }
 }

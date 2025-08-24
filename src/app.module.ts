@@ -1,5 +1,5 @@
 import { NecordModule } from "necord";
-import { IntentsBitField } from "discord.js";
+import { IntentsBitField, Partials } from "discord.js";
 import { Module } from "@nestjs/common"; 
 import { McpModule } from "@nestjs-mcp/server";
 import { ScheduleModule } from "@nestjs/schedule";
@@ -9,6 +9,7 @@ import { DatabaseModule } from "./shared/infrastructure/database/database.module
 import { UserModule } from "./users/infrastructure/user.module";
 import { TaskModule } from "./tasks/infrastructure/task.module";
 import { ReminderModule } from "./reminders/infrastructure/reminder.module";
+
 @Module({
   imports: [
     EnvConfigModule.forRoot(),
@@ -24,6 +25,7 @@ import { ReminderModule } from "./reminders/infrastructure/reminder.module";
           IntentsBitField.Flags.DirectMessages,
           IntentsBitField.Flags.MessageContent,
         ],
+        partials: [Partials.Channel],
       }),
     }),
     McpModule.forRoot({

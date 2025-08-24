@@ -1,6 +1,8 @@
 import { UseCase as DefaultUseCase } from "../../../shared/application/usecases/use-case";
 import { DiscordProvider } from "../../../shared/infrastructure/discord/discord.provider";
 import { UserRepository } from "../../../users/domain/repositories/user.repository";
+import { ReminderEntity } from "../../domain/entities/reminder.entity";
+import { ReminderRepository } from "../../domain/repositories/reminder.repository";
 import { ReminderOutput } from "../dtos/reminder-output.dto";
 
 export namespace SendMessageReminder {
@@ -16,20 +18,28 @@ export namespace SendMessageReminder {
     export class Usecase implements DefaultUseCase<Input, Output> {
         constructor(
             private userRepository: UserRepository.Repository,
+            private reminderRepository: ReminderRepository.Repository
         ) { }
 
         async execute(input: Input): Promise<Output> {
             const { discordProvider, listReminder } = input;
 
-            const dmReminders = listReminder.filter((r) => r.sendTo === "DM" && !r.reminded);
-            const channelReminders = listReminder.filter((r) => r.sendTo === "CHANNEL" && !r.reminded);
-
-            for (const reminder of dmReminders) {
+            for (const reminder of listReminder) {
                 if (this.shouldTrigger(reminder)) {
                     const userEntity = await this.userRepository.findById(reminder.userId);
                     const { discordId, discordUser } = userEntity.toJSON();
 
                     await discordProvider.sendDM(discordId, `Olá ${discordUser}. Você tem o seguinte lembrete:\n${reminder.message}`);
+
+                    const updateReminder = new ReminderEntity({
+                        reminded: true,
+                        message: reminder.message,
+                        remindAt: reminder.remindAt,
+                        userId: reminder.userId,
+                        createdAt: reminder.createdAt,
+                    }, reminder.id);
+
+                    await this.reminderRepository.update(updateReminder);
                 }
             }
 

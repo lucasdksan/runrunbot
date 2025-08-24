@@ -7,20 +7,12 @@ export class CreateReminderDto implements CreateReminder.Input {
     discordUser: string;
 
     @IsString()
-    @IsOptional()
-    channelId?: string;
-
-    @IsString()
     @IsNotEmpty()
     message: string;
 
     @IsDate()
     @IsNotEmpty()
     remindAt: Date;
-
-    @IsIn(["DM", "CHANNEL"])
-    @IsNotEmpty()
-    sendTo: "DM" | "CHANNEL";
 
     @IsBoolean()
     @IsOptional()

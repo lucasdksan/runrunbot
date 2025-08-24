@@ -14,8 +14,9 @@ export namespace GetAllReminder {
         
         async execute(_: Input): Promise<Output> {
             const reminders = await this.reminderRepository.findAll();
+            const reminderFiltered = reminders.filter((reminder) => !reminder.reminded);
 
-            return reminders.map((reminder) => ReminderOutputMapper.toOutput(reminder));
+            return reminderFiltered.map((reminder) => ReminderOutputMapper.toOutput(reminder));
         }
     }
 }

@@ -16,19 +16,12 @@ export class ReminderRules {
     userId: string;
 
     @IsString()
-    @IsOptional()
-    channelId?: string;
-
-    @IsString()
     @IsNotEmpty()
     @MaxLength(500)
     message: string;
 
     @IsDate()
     remindAt: Date;
-
-    @IsIn(["DM", "CHANNEL"])
-    sendTo: "DM" | "CHANNEL";
 
     @IsBoolean()
     @IsOptional()
@@ -40,19 +33,15 @@ export class ReminderRules {
 
     constructor({
         userId,
-        channelId,
         message,
         remindAt,
-        sendTo,
         reminded,
         createdAt,
     }: ReminderProps) {
         Object.assign(this, {
             userId,
-            channelId,
             message,
             remindAt,
-            sendTo,
             reminded,
             createdAt,
         });

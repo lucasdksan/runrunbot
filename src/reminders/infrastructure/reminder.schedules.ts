@@ -28,19 +28,5 @@ export class ReminderSchedules {
         const { message } = await this.sendMessageReminderUsecase.execute({ listReminder, discordProvider: this.discordProvider });
         
         this.logger.log(message);
-
-        // for (const reminder of channelReminders) {
-        //     if (this.shouldTrigger(reminder)) {
-        //         await this.discordProvider.sendToChannel(
-        //             reminder.channelId,
-        //             reminder.message
-        //         );
-
-        //         this.logger.log(
-        //             `Enviado lembrete para canal ${reminder.channelId}`
-        //         );
-        //         // aqui você pode marcar como "reminded = true" no banco
-        //     }
-        // }
     }
 }

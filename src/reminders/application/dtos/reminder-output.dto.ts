@@ -1,12 +1,12 @@
 import { ReminderEntity } from "../../domain/entities/reminder.entity";
 
 export type ReminderOutput = {
+    id: string;
     userId: string;
-    channelId?: string;
     message: string;
     remindAt: Date;
-    sendTo: "DM" | "CHANNEL";
     reminded?: boolean;
+    createdAt?: Date;
 }
 
 export class ReminderOutputMapper {

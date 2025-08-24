@@ -161,7 +161,8 @@ export class RunrunitService implements IRunrunitRepository {
         if (errors.length > 0) {
             errors.map((err) => {
                 console.log("Err: ", err.toString())
-            })
+            });
+            
             throw new BadRequestException({
                 message: "Dados inválidos para pauseTask",
                 errors: errors.map((e) => ({
@@ -199,7 +200,8 @@ export class RunrunitService implements IRunrunitRepository {
         if (errors.length > 0) {
             errors.map((err) => {
                 console.log("Err: ", err.toString())
-            })
+            });
+
             throw new BadRequestException({
                 message: "Dados inválidos para pauseTask",
                 errors: errors.map((e) => ({

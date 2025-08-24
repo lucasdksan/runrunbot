@@ -14,10 +14,8 @@ describe("ReminderEntity unit tests", () => {
     it("Constructor Method", () => {
         expect(ReminderEntity.validate).toHaveBeenCalled();
         expect(sut.props.userId).toEqual(props.userId);
-        expect(sut.props.channelId).toEqual(props.channelId);
         expect(sut.props.message).toEqual(props.message);
         expect(sut.props.remindAt).toBeInstanceOf(Date);
-        expect(["DM", "CHANNEL"]).toContain(sut.props.sendTo);
         expect(sut.props.reminded).toBe(false);
         expect(sut.props.createdAt).toBeInstanceOf(Date);
     });
@@ -26,12 +24,6 @@ describe("ReminderEntity unit tests", () => {
         expect(sut.userId).toBeDefined();
         expect(sut.userId).toEqual(props.userId);
         expect(typeof sut.props.userId).toBe("string");
-    });
-
-    it("Getter of channelId field", () => {
-        expect(sut.channelId).toBeDefined();
-        expect(sut.channelId).toEqual(props.channelId);
-        expect(typeof sut.props.channelId).toBe("string");
     });
 
     it("Getter of message field", () => {
@@ -56,12 +48,6 @@ describe("ReminderEntity unit tests", () => {
         expect(sut.remindAt).toEqual(newDate);
     });
 
-    it("Getter and Setter of sendTo field", () => {
-        expect(["DM", "CHANNEL"]).toContain(sut.sendTo);
-        sut["sendTo"] = "DM";
-        expect(sut.sendTo).toEqual("DM");
-    });
-
     it("Getter and Setter of reminded field", () => {
         expect(sut.reminded).toBe(false);
         sut.reminded = true;
@@ -78,11 +64,6 @@ describe("ReminderEntity unit tests", () => {
         const newDate = new Date(Date.now() + 7200 * 1000);
         sut.update({ remindAt: newDate });
         expect(sut.remindAt).toEqual(newDate);
-    });
-
-    it("Should update a reminder (sendTo)", () => {
-        sut.update({ sendTo: "CHANNEL" });
-        expect(sut.sendTo).toEqual("CHANNEL");
     });
 
     it("Getter of createdAt field", () => {

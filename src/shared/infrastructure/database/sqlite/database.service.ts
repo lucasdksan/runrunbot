@@ -18,6 +18,7 @@ export class SqliteService implements OnModuleInit, OnModuleDestroy {
                 discordUser TEXT NOT NULL,
                 discordId TEXT NOT NULL,
                 runrunitUser TEXT NOT NULL,
+                reviewer BOOLEAN DEFAULT 0,
                 createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
             );
         `);
@@ -26,14 +27,12 @@ export class SqliteService implements OnModuleInit, OnModuleDestroy {
             CREATE TABLE IF NOT EXISTS reminders (
                 id TEXT PRIMARY KEY,
                 userId TEXT NOT NULL,
-                channelId TEXT,
                 message TEXT NOT NULL,
                 remindAt DATETIME NOT NULL,
-                sendTo TEXT NOT NULL CHECK(sendTo IN ('DM', 'CHANNEL')),
                 reminded BOOLEAN DEFAULT 0,
                 createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
             );
-        `);        
+        `);
     }
 
     async onModuleDestroy() {

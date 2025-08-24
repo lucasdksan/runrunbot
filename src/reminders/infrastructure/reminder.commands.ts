@@ -33,19 +33,12 @@ export class ReminderCommands {
             .setStyle(TextInputStyle.Short)
             .setRequired(true);
 
-        const sendToInput = new TextInputBuilder()
-            .setCustomId("sendTo")
-            .setLabel("Enviar para (DM ou CHANNEL)")
-            .setStyle(TextInputStyle.Short)
-            .setRequired(true);
-
         const modal = new ModalBuilder()
             .setCustomId("register/reminder")
             .setTitle("Registrar lembrete")
             .addComponents(
                 new ActionRowBuilder<TextInputBuilder>().addComponents(messageInput),
-                new ActionRowBuilder<TextInputBuilder>().addComponents(remindAtInput),
-                new ActionRowBuilder<TextInputBuilder>().addComponents(sendToInput),
+                new ActionRowBuilder<TextInputBuilder>().addComponents(remindAtInput)
             );
 
         return interaction.showModal(modal);
@@ -57,14 +50,11 @@ export class ReminderCommands {
             const discordUser = interaction.user.username;
             const message = interaction.fields.getTextInputValue("message");
             const remindAtInput = interaction.fields.getTextInputValue("remindAt");
-            const sendToInput = interaction.fields.getTextInputValue("sendTo");
             const remindAt = new Date(remindAtInput.replace(" ", "T"));
-            const sendTo = sendToInput.toUpperCase() === "CHANNEL" ? "CHANNEL" : "DM";
             const dto = plainToInstance(CreateReminderDto, {
                 discordUser,
                 message,
-                remindAt,
-                sendTo
+                remindAt
             });
             const errors = await validate(dto);
 
@@ -79,6 +69,8 @@ export class ReminderCommands {
                 flags: 1 << 6,
             });
         } catch (error) {
+            console.error("Error: ", error);
+
             return interaction.reply({
                 content: "Erro ao registrar lembrete.",
                 flags: 1 << 6,
@@ -113,7 +105,7 @@ export class ReminderCommands {
             });
 
             return interaction.reply({
-                content: `Seus lembretes:\n${print}`,
+                content: list.length === 0 ? "Você não possui lembretes" : `Seus lembretes:\n${print}`,
                 flags: 1 << 6,
             });
         } catch (error) {

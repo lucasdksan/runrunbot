@@ -20,10 +20,8 @@ export class ReminderSqliteRepository implements ReminderRepository.Repository {
             SELECT
             id,
             userId,
-            channelId,
             message,
             remindAt,
-            sendTo,
             reminded,
             createdAt
             FROM reminders
@@ -31,10 +29,8 @@ export class ReminderSqliteRepository implements ReminderRepository.Repository {
 
         return rows.map((row: any) => new ReminderEntity({
             userId: row.userId,
-            channelId: row.channelId ?? undefined,
             message: row.message,
             remindAt: new Date(row.remindAt),
-            sendTo: row.sendTo,
             reminded: !!row.reminded,
             createdAt: new Date(row.createdAt),
         }, row.id));
@@ -53,22 +49,18 @@ export class ReminderSqliteRepository implements ReminderRepository.Repository {
         const {
             id,
             userId,
-            channelId,
             message,
             remindAt,
-            sendTo,
             reminded,
             createdAt
         } = entity.toJSON();
 
         await this.sqliteService.connection.run(
-            `INSERT INTO reminders (id, userId, channelId, message, remindAt, sendTo, reminded, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO reminders (id, userId, message, remindAt, reminded, createdAt) VALUES (?, ?, ?, ?, ?, ?)`,
             id,
             userId,
-            channelId ?? null,
             message,
             remindAt.toISOString(),
-            sendTo,
             reminded ? 1 : 0,
             createdAt?.toISOString()
         );
@@ -90,19 +82,17 @@ export class ReminderSqliteRepository implements ReminderRepository.Repository {
     async update(entity: ReminderEntity): Promise<void> {
         await this._get(entity.id);
 
-        const { id, userId, channelId, message, remindAt, sendTo, reminded, createdAt } = entity.toJSON();
+        const { id, userId, message, remindAt, reminded, createdAt } = entity.toJSON();
 
         await this.sqliteService.connection.run(
             `
             UPDATE reminders
-            SET userId = ?, channelId = ?, message = ?, remindAt = ?, sendTo = ?, reminded = ?, createdAt = ?
+            SET userId = ?, message = ?, remindAt = ?, reminded = ?, createdAt = ?
             WHERE id = ?
         `,
             userId,
-            channelId ?? null,
             message,
             remindAt.toISOString(),
-            sendTo,
             reminded ? 1 : 0,
             createdAt?.toISOString(),
             id
@@ -131,10 +121,8 @@ export class ReminderSqliteRepository implements ReminderRepository.Repository {
 
             return new ReminderEntity({
                 userId: row.userId,
-                channelId: row.channelId ?? undefined,
                 message: row.message,
                 remindAt: new Date(row.remindAt),
-                sendTo: row.sendTo,
                 reminded: !!row.reminded,
                 createdAt: row.createdAt ? new Date(row.createdAt) : new Date(),
             }, row.id);

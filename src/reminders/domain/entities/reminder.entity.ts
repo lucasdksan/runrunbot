@@ -4,10 +4,8 @@ import { ReminderValidatorFactory } from "../validators/reminder.validator";
 
 export type ReminderProps = {
     userId: string;
-    channelId?: string;
     message: string;
     remindAt: Date;
-    sendTo: "DM" | "CHANNEL";
     reminded?: boolean;
     createdAt?: Date;
 };
@@ -22,7 +20,7 @@ export class ReminderEntity extends Entity<ReminderProps> {
     }
 
 
-    update(values: Partial<Pick<ReminderProps, "message" | "remindAt" | "sendTo" | "channelId">>): void {
+    update(values: Partial<Pick<ReminderProps, "message" | "remindAt">>): void {
         const newProps = { ...this.props, ...values };
         ReminderEntity.validate(newProps);
 
@@ -32,14 +30,6 @@ export class ReminderEntity extends Entity<ReminderProps> {
 
         if (values.remindAt !== undefined) {
             this.remindAt = values.remindAt;
-        }
-
-        if (values.sendTo !== undefined) {
-            this.sendTo = values.sendTo;
-        }
-
-        if (values.channelId !== undefined) {
-            this.channelId = values.channelId;
         }
     }
 
@@ -51,20 +41,8 @@ export class ReminderEntity extends Entity<ReminderProps> {
         this.props.remindAt = value;
     }
 
-    private set sendTo(value: "DM" | "CHANNEL") {
-        this.props.sendTo = value;
-    }
-
-    private set channelId(value: string | undefined) {
-        this.props.channelId = value;
-    }
-
     get userId() {
         return this.props.userId;
-    }
-
-    get channelId() {
-        return this.props.channelId;
     }
 
     get message() {
@@ -73,10 +51,6 @@ export class ReminderEntity extends Entity<ReminderProps> {
 
     get remindAt() {
         return this.props.remindAt;
-    }
-
-    get sendTo() {
-        return this.props.sendTo;
     }
 
     get reminded() {

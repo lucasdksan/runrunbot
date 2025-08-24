@@ -65,8 +65,9 @@ import { SendMessageReminder } from "../application/usecases/send-message-remind
             provide: SendMessageReminder.Usecase,
             useFactory: (
                 useRepository: UserRepository.Repository,
-            ) => new SendMessageReminder.Usecase(useRepository),
-            inject: ["UserRepository"]
+                reminderRepository: ReminderRepository.Repository,
+            ) => new SendMessageReminder.Usecase(useRepository, reminderRepository),
+            inject: ["UserRepository", "ReminderRepository"]
         },
         ReminderCommands,
         ReminderSchedules

@@ -7,10 +7,8 @@ import { ReminderOutput, ReminderOutputMapper } from "../dtos/reminder-output.dt
 export namespace CreateReminder {
     export type Input = {
         discordUser: string;
-        channelId?: string;
         message: string;
         remindAt: Date;
-        sendTo: "DM" | "CHANNEL";
         reminded?: boolean;
     };
 
