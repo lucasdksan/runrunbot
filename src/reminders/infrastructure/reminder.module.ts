@@ -12,9 +12,11 @@ import { EnvConfigModule } from "../../shared/infrastructure/env-config/env-conf
 import { ReminderSchedules } from "./reminder.schedules";
 import { GetUserReminder } from "../application/usecases/get-user-reminder.usecase";
 import { SendMessageReminder } from "../application/usecases/send-message-reminder.usecase";
+import { DiscordModule } from "../../shared/infrastructure/discord/discord.module";
+import { DiscordService } from "../../shared/infrastructure/discord/discord.service";
 
 @Module({
-    imports: [EnvConfigModule],
+    imports: [EnvConfigModule, DiscordModule],
     controllers: [],
     providers: [
         {
@@ -66,8 +68,9 @@ import { SendMessageReminder } from "../application/usecases/send-message-remind
             useFactory: (
                 useRepository: UserRepository.Repository,
                 reminderRepository: ReminderRepository.Repository,
-            ) => new SendMessageReminder.Usecase(useRepository, reminderRepository),
-            inject: ["UserRepository", "ReminderRepository"]
+                discordService: DiscordService
+            ) => new SendMessageReminder.Usecase(useRepository, reminderRepository, discordService),
+            inject: ["UserRepository", "ReminderRepository", DiscordService]
         },
         ReminderCommands,
         ReminderSchedules

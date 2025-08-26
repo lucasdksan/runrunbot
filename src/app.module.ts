@@ -9,6 +9,7 @@ import { DatabaseModule } from "./shared/infrastructure/database/database.module
 import { UserModule } from "./users/infrastructure/user.module";
 import { TaskModule } from "./tasks/infrastructure/task.module";
 import { ReminderModule } from "./reminders/infrastructure/reminder.module";
+import { DiscordModule } from "./shared/infrastructure/discord/discord.module";
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { ReminderModule } from "./reminders/infrastructure/reminder.module";
     ScheduleModule.forRoot(),
     UserModule,
     TaskModule,
-    ReminderModule
+    ReminderModule,
+    DiscordModule
   ],  
   controllers: [],
   providers: [],

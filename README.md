@@ -55,10 +55,6 @@ All new commit
 
 > Insira esta configuração no seu arquivo mcp.json para acessar o mcp.
 
-* O MCP possui duas ferramentas:
-  - get_description: Responsável por obter a descrição da tarefa a partir do ID da tarefa publicado no chat.
-  - send_comment: Envia um comentário sobre a tarefa. Requer o ID da tarefa e o comentário.
-
 ## Funcionalidades
 
 > O projeto é dividido em três entidades principais: Lembretes, responsável por registrar lembretes. Tarefas, responsável por gerenciar, atualizar, iniciar, pausar e assim por diante, relacionados às tarefas. Usuários, responsável por registrar usuários e conectar o usuário do Discord ao Runrunit. Observação: shared contém apenas funcionalidades que são compartilhadas entre as outra entidades principais.

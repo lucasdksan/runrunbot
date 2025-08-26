@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
+import { validateSync } from "class-validator";
 import { GenerateContentConfig, GoogleGenAI, ToolListUnion } from "@google/genai";
 import { EnvConfigService } from "../../../../shared/infrastructure/env-config/env-config.service";
 import { IIARepository } from "./repositories/i-ia-repository";
-import { DefaultInputDto } from "./dto/default-input.dto";
-import { validateSync } from "class-validator";
+import { DefaultInputDto } from "./dtos/default-input.dto";
 
 @Injectable()
 export class IAService implements IIARepository {

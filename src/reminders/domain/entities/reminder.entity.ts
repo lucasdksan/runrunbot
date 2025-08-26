@@ -1,5 +1,6 @@
 import { Entity } from "../../../shared/domain/entity/entity";
 import { EntityValidationError } from "../../../shared/domain/errors/validation-error";
+import { ReminderOutput } from "../../application/dtos/reminder-output.dto";
 import { ReminderValidatorFactory } from "../validators/reminder.validator";
 
 export type ReminderProps = {
@@ -72,5 +73,18 @@ export class ReminderEntity extends Entity<ReminderProps> {
         if (!isValid) {
             throw new EntityValidationError(validator.errors ? validator.errors : {});
         }
+    }
+
+    static shouldTrigger(reminder: ReminderOutput): boolean {
+        const remindDate = new Date(reminder.remindAt);
+        const now = new Date();
+
+        return (
+            remindDate.getUTCFullYear() === now.getUTCFullYear() &&
+            remindDate.getUTCMonth() === now.getUTCMonth() &&
+            remindDate.getUTCDate() === now.getUTCDate() &&
+            remindDate.getUTCHours() === now.getUTCHours() &&
+            remindDate.getUTCMinutes() === now.getUTCMinutes()
+        );
     }
 }
