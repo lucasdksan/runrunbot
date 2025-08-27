@@ -4,9 +4,10 @@ import { Client, GatewayIntentBits, TextChannel } from "discord.js";
 import { MessageInputDto } from "./dtos/message-input.dto";
 import { validateSync } from "class-validator";
 import { ChannelInputDto } from "./dtos/channel-input.dto";
+import { IDiscordRepository } from "./repositories/i-discord-repository";
 
 @Injectable()
-export class DiscordService {
+export class DiscordService implements IDiscordRepository {
     private client: Client;
 
     constructor(
@@ -19,6 +20,7 @@ export class DiscordService {
                 GatewayIntentBits.Guilds,
                 GatewayIntentBits.GuildMessages,
                 GatewayIntentBits.DirectMessages,
+                GatewayIntentBits.MessageContent
             ],
         });
         this.client.login(token);

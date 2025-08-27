@@ -1,6 +1,6 @@
 import { UseCase as DefaultUseCase } from "../../../shared/application/usecases/use-case";
-import { DiscordService } from "../../../shared/infrastructure/discord/discord.service";
 import { ChannelInputDto } from "../../../shared/infrastructure/discord/dtos/channel-input.dto";
+import { IDiscordRepository } from "../../../shared/infrastructure/discord/repositories/i-discord-repository";
 
 export namespace MeetReminder {
     export type Input = void;
@@ -12,7 +12,7 @@ export namespace MeetReminder {
         private mainChannel = "1128392453884498093";
         
         constructor(
-            private discordService: DiscordService,
+            private discordService: IDiscordRepository,
         ){}
         
         async execute(_: Input): Promise<Output> {

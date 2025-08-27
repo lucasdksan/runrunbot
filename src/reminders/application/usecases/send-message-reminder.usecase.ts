@@ -1,6 +1,7 @@
 import { UseCase as DefaultUseCase } from "../../../shared/application/usecases/use-case";
 import { DiscordService } from "../../../shared/infrastructure/discord/discord.service";
 import { MessageInputDto } from "../../../shared/infrastructure/discord/dtos/message-input.dto";
+import { IDiscordRepository } from "../../../shared/infrastructure/discord/repositories/i-discord-repository";
 import { UserRepository } from "../../../users/domain/repositories/user.repository";
 import { ReminderEntity } from "../../domain/entities/reminder.entity";
 import { ReminderRepository } from "../../domain/repositories/reminder.repository";
@@ -19,7 +20,7 @@ export namespace SendMessageReminder {
         constructor(
             private userRepository: UserRepository.Repository,
             private reminderRepository: ReminderRepository.Repository,
-            private discordService: DiscordService,
+            private discordService: IDiscordRepository,
         ) { }
 
         async execute(input: Input): Promise<Output> {
