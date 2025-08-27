@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { GetAllReminder } from "../application/usecases/get-all-reminder.usecase";
 import { SendMessageReminder } from "../application/usecases/send-message-reminder.usecase";
+import { MeetReminder } from "../application/usecases/meet-reminder.usecase";
 
 @Injectable()
 export class ReminderSchedules {
@@ -13,6 +14,9 @@ export class ReminderSchedules {
     @Inject(SendMessageReminder.Usecase)
     private sendMessageReminderUsecase: SendMessageReminder.Usecase;
 
+    @Inject(MeetReminder.Usecase)
+    private meetReminderUsecase: MeetReminder.Usecase;
+
     constructor() {}
 
     @Cron(CronExpression.EVERY_MINUTE)
@@ -22,4 +26,9 @@ export class ReminderSchedules {
         
         this.logger.log(message);
     }
+
+    @Cron("0 14 * * *")
+    async handleMessage(){
+        await this.meetReminderUsecase.execute();
+    }   
 }
