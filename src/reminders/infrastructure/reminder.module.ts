@@ -14,6 +14,7 @@ import { GetUserReminder } from "../application/usecases/get-user-reminder.useca
 import { SendMessageReminder } from "../application/usecases/send-message-reminder.usecase";
 import { DiscordModule } from "../../shared/infrastructure/discord/discord.module";
 import { DiscordService } from "../../shared/infrastructure/discord/discord.service";
+import { MeetReminder } from "../application/usecases/meet-reminder.usecase";
 
 @Module({
     imports: [EnvConfigModule, DiscordModule],
@@ -71,6 +72,13 @@ import { DiscordService } from "../../shared/infrastructure/discord/discord.serv
                 discordService: DiscordService
             ) => new SendMessageReminder.Usecase(useRepository, reminderRepository, discordService),
             inject: ["UserRepository", "ReminderRepository", DiscordService]
+        },
+        {
+            provide: MeetReminder.Usecase,
+            useFactory: (
+                discordService: DiscordService
+            ) => new MeetReminder.Usecase(discordService),
+            inject: [DiscordService]
         },
         ReminderCommands,
         ReminderSchedules
