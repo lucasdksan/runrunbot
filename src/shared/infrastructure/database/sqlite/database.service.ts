@@ -33,6 +33,12 @@ export class SqliteService implements OnModuleInit, OnModuleDestroy {
                 createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
             );
         `);
+
+        await this.db.exec(`
+            CREATE TABLE IF NOT EXISTS clients (
+                
+            );
+        `);
     }
 
     async onModuleDestroy() {
