@@ -65,4 +65,8 @@ export class DiscordService implements IDiscordRepository {
             console.error("Erro ao enviar DM:", err);
         }
     }
+    
+    async healthCheck(): Promise<boolean> {
+        return this.client.isReady();
+    }
 }

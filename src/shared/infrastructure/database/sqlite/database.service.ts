@@ -1,6 +1,6 @@
-import { Injectable, OnModuleInit, OnModuleDestroy } from "@nestjs/common";
-import * as sqlite3 from "sqlite3";
-import { open, Database } from "sqlite";
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import * as sqlite3 from 'sqlite3';
+import { open, Database } from 'sqlite';
 
 @Injectable()
 export class SqliteService implements OnModuleInit, OnModuleDestroy {
@@ -8,7 +8,7 @@ export class SqliteService implements OnModuleInit, OnModuleDestroy {
 
     async onModuleInit() {
         this.db = await open({
-            filename: process.env.SQLITE_PATH || "database.sqlite",
+            filename: process.env.SQLITE_PATH || 'database.sqlite',
             driver: sqlite3.Database,
         });
 
@@ -41,5 +41,15 @@ export class SqliteService implements OnModuleInit, OnModuleDestroy {
 
     get connection() {
         return this.db;
+    }
+
+    async healthCheck(): Promise<boolean> {
+        try {
+            await this.db.get('SELECT 1');
+            return true;
+        } catch (err) {
+            console.error('Erro ao verificar conexão com SQLite:', err);
+            return false;
+        }
     }
 }
