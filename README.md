@@ -59,8 +59,11 @@ All new commit
 
 > O projeto é dividido em três entidades principais: Lembretes, responsável por registrar lembretes. Tarefas, responsável por gerenciar, atualizar, iniciar, pausar e assim por diante, relacionados às tarefas. Usuários, responsável por registrar usuários e conectar o usuário do Discord ao Runrunit. Observação: shared contém apenas funcionalidades que são compartilhadas entre as outra entidades principais.
 
+* **Health**
+  - checkSystem: Endpoint para verificar o status dos serviços.
+
 * **Reminders**
-  - register_reminder: Responsavel por registrar um lembrete ao usuário do discord.
+  - register_reminder: Responsável por registrar um lembrete ao usuário do discord.
   - list_reminder: Lista todos os lembres do usuário.
   - schedules: Valida todos os lembretes, valida a data, se a data corresponder à data atual, envia a mensagem ao usuário.
 

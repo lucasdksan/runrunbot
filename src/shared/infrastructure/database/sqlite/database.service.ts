@@ -42,4 +42,14 @@ export class SqliteService implements OnModuleInit, OnModuleDestroy {
     get connection() {
         return this.db;
     }
+
+    async healthCheck(): Promise<boolean> {
+        try {
+            await this.db.get("SELECT 1");
+            return true;
+        } catch (err) {
+            console.error("Erro ao verificar conexão com SQLite:", err);
+            return false;
+        }
+    }
 }

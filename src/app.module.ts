@@ -1,6 +1,6 @@
 import { NecordModule } from "necord";
 import { IntentsBitField, Partials } from "discord.js";
-import { Module } from "@nestjs/common"; 
+import { Module } from "@nestjs/common";
 import { McpModule } from "@nestjs-mcp/server";
 import { ScheduleModule } from "@nestjs/schedule";
 import { EnvConfigModule } from "./shared/infrastructure/env-config/env-config.module";
@@ -10,6 +10,7 @@ import { UserModule } from "./users/infrastructure/user.module";
 import { TaskModule } from "./tasks/infrastructure/task.module";
 import { ReminderModule } from "./reminders/infrastructure/reminder.module";
 import { DiscordModule } from "./shared/infrastructure/discord/discord.module";
+import { HealthModule } from "./health/infrastructure/health.module";
 
 @Module({
   imports: [
@@ -40,9 +41,10 @@ import { DiscordModule } from "./shared/infrastructure/discord/discord.module";
     UserModule,
     TaskModule,
     ReminderModule,
-    DiscordModule
-  ],  
+    DiscordModule,
+    HealthModule,
+  ],
   controllers: [],
   providers: [],
 })
-export class AppModule { };
+export class AppModule {}
