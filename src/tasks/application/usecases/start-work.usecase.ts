@@ -31,7 +31,7 @@ export namespace StartWork {
             };
 
             const tasksFiltered = TaskEntity.filterTasks(entity.runrunitUser, tasks);
-            const message = tasksFiltered.map(task => `* ID: ${task.id} - Título: [${task.title}](https://runrun.it/pt-BR/tasks/${task.id}) - Etapa: ${task.board_stage_name}`).join('\n');
+            const message = tasksFiltered.map(task => `* ID: ${task.id} - Título: [${task.title}](https://runrun.it/pt-BR/tasks/${task.id}) - Etapa: ${task.board_stage_name}`).join("\n");
 
             return DefaultOutputMapper.toOutput(message);
         }
