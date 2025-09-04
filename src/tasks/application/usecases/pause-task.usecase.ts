@@ -1,6 +1,6 @@
 import { UseCase as DefaultUseCase } from "../../../shared/application/usecases/use-case";
-import { PauseTaskDto } from "../../infrastructure/external/runrunit/dtos/pause-task.dto";
-import { IRunrunitRepository } from "../../infrastructure/external/runrunit/repositories/i-runrunit-repository";
+import { PauseTaskDto } from "../../../shared/infrastructure/runrunit/dtos/pause-task.dto";
+import { IRunrunitRepository } from "../../../shared/infrastructure/runrunit/repositories/i-runrunit-repository";
 
 export namespace PauseTask {
     export type Input = {

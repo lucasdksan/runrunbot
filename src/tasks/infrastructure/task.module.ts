@@ -1,13 +1,13 @@
 import { Module } from "@nestjs/common";
 import { McpModule } from "@nestjs-mcp/server";
-import { RunrunitModule } from "./external/runrunit/runrunit.module";
+import { RunrunitModule } from "../../shared/infrastructure/runrunit/runrunit.module";
 import { TaskCommands } from "./task.commands";
 import { SqliteService } from "../../shared/infrastructure/database/sqlite/database.service";
 import { UserSqliteRepository } from "../../users/infrastructure/database/sqlite/repositories/user-sqlite.repository";
 import { StartWork } from "../application/usecases/start-work.usecase";
 import { UserRepository } from "../../users/domain/repositories/user.repository";
-import { IRunrunitRepository } from "./external/runrunit/repositories/i-runrunit-repository";
-import { RunrunitService } from "./external/runrunit/runrunit.service";
+import { IRunrunitRepository } from "../../shared/infrastructure/runrunit/repositories/i-runrunit-repository";
+import { RunrunitService } from "../../shared/infrastructure/runrunit/runrunit.service";
 import { EndWork } from "../application/usecases/end-work.usecase";
 import { TaskTools } from "./task.tools";
 import { IAModule } from "./external/ia/ia.module";

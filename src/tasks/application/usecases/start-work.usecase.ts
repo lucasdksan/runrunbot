@@ -2,7 +2,7 @@ import { BadRequestError } from "../../../shared/application/errors/bad-request-
 import { UseCase as DefaultUseCase } from "../../../shared/application/usecases/use-case";
 import { UserRepository } from "../../../users/domain/repositories/user.repository";
 import { TaskEntity } from "../../domain/entities/task.entity";
-import { IRunrunitRepository } from "../../infrastructure/external/runrunit/repositories/i-runrunit-repository";
+import { IRunrunitRepository } from "../../../shared/infrastructure/runrunit/repositories/i-runrunit-repository";
 import { DefaultOutput, DefaultOutputMapper } from "../dtos/default-output.dto";
 
 export namespace StartWork {

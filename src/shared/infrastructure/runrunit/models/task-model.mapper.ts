@@ -1,4 +1,4 @@
-import { TaskEntity } from "../../../../domain/entities/task.entity";
+import { TaskEntity } from "../../../../tasks/domain/entities/task.entity";
 
 export class RunrunitTaskMapper {
     static toEntity(external: any): TaskEntity {

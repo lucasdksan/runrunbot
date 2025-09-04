@@ -10,8 +10,8 @@ import { EstimateTask } from "../application/usecases/estimate-task.usecase";
 import { EstimateDto } from "./dtos/estimate.dto";
 import { EstimateTaskDto } from "./dtos/estimate-task.dto";
 import { PlayTask } from "../application/usecases/play-task.usecase";
-import { PlayTaskDto } from "./external/runrunit/dtos/play-task.dto";
-import { PauseTaskDto } from "./external/runrunit/dtos/pause-task.dto";
+import { PlayTaskDto } from "../../shared/infrastructure/runrunit/dtos/play-task.dto";
+import { PauseTaskDto } from "../../shared/infrastructure/runrunit/dtos/pause-task.dto";
 import { PauseTask } from "../application/usecases/pause-task.usecase";
 
 @Injectable()

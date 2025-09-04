@@ -1,13 +1,13 @@
 import z from "zod";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types";
 import { Resolver, Tool } from "@nestjs-mcp/server";
-import { IRunrunitRepository } from "./external/runrunit/repositories/i-runrunit-repository";
-import { GetDescriptionTaskDto } from "./external/runrunit/dtos/get-description-task.dto";
-import { CreateCommentDto } from "./external/runrunit/dtos/create-comment.dto";
-import { PauseTaskDto } from "./external/runrunit/dtos/pause-task.dto";
-import { PlayTaskDto } from "./external/runrunit/dtos/play-task.dto";
+import { IRunrunitRepository } from "../../shared/infrastructure/runrunit/repositories/i-runrunit-repository";
+import { GetDescriptionTaskDto } from "../../shared/infrastructure/runrunit/dtos/get-description-task.dto";
+import { CreateCommentDto } from "../../shared/infrastructure/runrunit/dtos/create-comment.dto";
+import { PauseTaskDto } from "../../shared/infrastructure/runrunit/dtos/pause-task.dto";
+import { PlayTaskDto } from "../../shared/infrastructure/runrunit/dtos/play-task.dto";
 import { TaskEntity } from "../domain/entities/task.entity";
-import { GetCommentTaskDto } from "./external/runrunit/dtos/get-comment-task.dto";
+import { GetCommentTaskDto } from "../../shared/infrastructure/runrunit/dtos/get-comment-task.dto";
 import { TurndownProvider } from "./providers/turndown/turndown.provider";
 
 @Resolver("tasks")
