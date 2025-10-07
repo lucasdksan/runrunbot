@@ -69,4 +69,8 @@ export class UserEntity extends Entity<UserProps> {
             throw new EntityValidationError(validator.errors ? validator.errors : {});
         }
     }
+
+    static filterTask(tasks: any[], runrunId: string){
+        return tasks.filter((task) => task.responsible_id === runrunId);
+    }
 }
