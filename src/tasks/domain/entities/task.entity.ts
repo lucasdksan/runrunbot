@@ -81,7 +81,7 @@ export class TaskEntity extends Entity<TaskProps> {
         return this.turndown.convertHTMLtoMD(this.description);
     }
 
-    static publicFormatDescription(value: string){
+    static publicFormatDescription(value: string) {
         const turndown = new TurndownProvider();
 
         return turndown.convertHTMLtoMD(value);
@@ -126,5 +126,21 @@ export class TaskEntity extends Entity<TaskProps> {
 
             return stageMatch && assigneeMatch;
         });
+    }
+
+    static separationResponsibleId(tasks: any[]) {
+        const groupedByResponsible = tasks.reduce((acc, item) => {
+            const { responsible_id } = item;
+
+            if (!acc[responsible_id]) {
+                acc[responsible_id] = [];
+            }
+
+            acc[responsible_id].push(item);
+
+            return acc;
+        }, {});
+
+        return groupedByResponsible;
     }
 }

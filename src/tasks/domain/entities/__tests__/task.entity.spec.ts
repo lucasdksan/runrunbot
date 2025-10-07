@@ -14,7 +14,7 @@ describe("TaskEntity unit tests", () => {
 
     beforeEach(() => {
         TaskEntity.validate = jest.fn();
-        
+
         props = TaskDataBuilder({});
         sut = new TaskEntity(props);
     });
@@ -63,5 +63,34 @@ describe("TaskEntity unit tests", () => {
         expect(result).toHaveLength(3);
         const ids = result.map((t) => t.id);
         expect(ids).toEqual(expect.arrayContaining([1, 2, 3]));
+    });
+
+    it("separationResponsibleId: deve retonar as tarefas separadas por responsible_id", () => {
+        const tasks = [
+            { id: 1, title: "Task A", responsible_id: "user-1" },
+            { id: 2, title: "Task B", responsible_id: "user-2" },
+            { id: 3, title: "Task C", responsible_id: "user-1" },
+            { id: 4, title: "Task D", responsible_id: "user-3" },
+            { id: 5, title: "Task E", responsible_id: "user-2" },
+        ];
+
+        const result = TaskEntity.separationResponsibleId(tasks);
+
+        expect(result).toHaveProperty("user-1");
+        expect(result).toHaveProperty("user-2");
+        expect(result).toHaveProperty("user-3");
+
+        // user-1 deve ter 2 tarefas
+        expect(result["user-1"]).toHaveLength(2);
+        expect(result["user-1"].map(t => t.id)).toEqual(expect.arrayContaining([1, 3]));
+
+        // user-2 deve ter 2 tarefas
+        expect(result["user-2"]).toHaveLength(2);
+        expect(result["user-2"].map(t => t.id)).toEqual(expect.arrayContaining([2, 5]));
+
+        // user-3 deve ter apenas 1 tarefa
+        expect(result["user-3"]).toHaveLength(1);
+        expect(result["user-3"][0].id).toBe(4);
+
     });
 });
