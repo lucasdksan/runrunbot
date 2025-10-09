@@ -1,4 +1,5 @@
 import { UseCase as DefaultUseCase } from "../../../shared/application/usecases/use-case";
+import { IIARepository } from "../../../shared/infrastructure/ia/repositories/i-ia-repository";
 import { IRunrunitRepository } from "../../../shared/infrastructure/runrunit/repositories/i-runrunit-repository";
 import { TaskEntity } from "../../../tasks/domain/entities/task.entity";
 import { UserRepository } from "../../domain/repositories/user.repository";
@@ -12,6 +13,7 @@ export namespace AnalyzePerformance {
         constructor(
             private userRepository: UserRepository.Repository,
             private runrunitRepo: IRunrunitRepository,
+            private iaRepo: IIARepository,
         ) { }
         
         async execute(_: Input): Promise<Output> {

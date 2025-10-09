@@ -9,9 +9,12 @@ import { RunrunitService } from "../../shared/infrastructure/runrunit/runrunit.s
 import { IRunrunitRepository } from "../../shared/infrastructure/runrunit/repositories/i-runrunit-repository";
 import { UserSchedules } from "./user.schedules";
 import { RunrunitModule } from "../../shared/infrastructure/runrunit/runrunit.module";
+import { IAModule } from "../../shared/infrastructure/ia/ia.module";
+import { IIARepository } from "../../shared/infrastructure/ia/repositories/i-ia-repository";
+import { IAService } from "../../shared/infrastructure/ia/ia.service";
 
 @Module({
-    imports: [RunrunitModule],
+    imports: [RunrunitModule, IAModule],
     controllers: [],
     providers: [
         {
@@ -35,8 +38,9 @@ import { RunrunitModule } from "../../shared/infrastructure/runrunit/runrunit.mo
             useFactory: (
                 useRepository: UserRepository.Repository,
                 runrunitRepo: IRunrunitRepository,
-            ) => new AnalyzePerformance.Usecase(useRepository, runrunitRepo),
-            inject: ["UserRepository", RunrunitService]
+                iaRepo: IIARepository
+            ) => new AnalyzePerformance.Usecase(useRepository, runrunitRepo, iaRepo),
+            inject: ["UserRepository", RunrunitService, IAService]
         },
         UserCommands,
         UserSchedules
