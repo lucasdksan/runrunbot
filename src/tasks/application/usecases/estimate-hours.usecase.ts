@@ -9,7 +9,7 @@ export namespace EstimateHours {
         text: string;
     };
 
-    export type Output = DefaultOutput;
+    export type Output = DefaultOutput[];
 
     export class Usecase implements DefaultUseCase<Input, Output> {
         constructor(
@@ -24,15 +24,13 @@ export namespace EstimateHours {
                 Estime em horas o tempo necessário para fazer a seguinte tarefa.
                 ${text}
 
-                É de extrema importância o seu retorno não passar dos 1500 caracteres.
-
-                **Observação 1:** **NÃO GERE MAIS DE 1500 CARACTERES** .
-                **Observação 2:** **LEIA DE FORMA MINUCIOSA OS SEGUINTES COMANDOS** -> ${EstimateTaskAgentText()}
+                **Observação:** **LEIA DE FORMA MINUCIOSA OS SEGUINTES COMANDOS** -> ${EstimateTaskAgentText()}
             `;
 
             const response = await this.iaRepo.generateResult(dto);
+            const responseArray = this.iaRepo.splitTextBySentence(response, 1600);
 
-            return DefaultOutputMapper.toOutput(response);
+            return responseArray.map((r) => DefaultOutputMapper.toOutput(r));
         }
     }
 }
