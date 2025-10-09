@@ -30,7 +30,7 @@ export class IAService implements IIARepository {
     async generateResult(dto: DefaultInputDto): Promise<string> {
         try {
             const errors = validateSync(dto);
-            
+
             if (errors.length > 0) {
                 throw new Error("Dados inválidos para getTask");
             }
@@ -41,7 +41,7 @@ export class IAService implements IIARepository {
                     parts: [{ text: dto.input }],
                 },
             ];
-            
+
             const response = await this.ai.models.generateContentStream({
                 model: this.model,
                 contents,
@@ -61,5 +61,40 @@ export class IAService implements IIARepository {
             console.error("Erro ao gerar conteúdo com a IA: ", error);
             throw new Error("Falha ao gerar resposta da IA.");
         }
+    }
+
+    public splitTextBySentence(text: string, maxLength: number): string[] {
+        const parts: string[] = [];
+        let start = 0;
+
+        while (start < text.length) {
+            let end = start + maxLength;
+
+            if (end < text.length) {
+                let breakIndex = text.lastIndexOf('.', end);
+
+                if (breakIndex === -1 || breakIndex < start) {
+                    breakIndex = text.lastIndexOf('\n', end);
+                }
+
+                if (breakIndex === -1 || breakIndex < start) {
+                    breakIndex = text.lastIndexOf(' ', end);
+                }
+
+                if (breakIndex === -1 || breakIndex < start) {
+                    breakIndex = end;
+                }
+
+                const chunk = text.slice(start, breakIndex + 1).trim();
+                parts.push(chunk);
+                start = breakIndex + 1;
+            } else {
+                const chunk = text.slice(start).trim();
+                parts.push(chunk);
+                break;
+            }
+        }
+
+        return parts.filter(Boolean);
     }
 }

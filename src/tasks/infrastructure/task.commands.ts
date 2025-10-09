@@ -204,10 +204,14 @@ export class TaskCommands {
 
             await interaction.reply({ content: "Isso pode levar alguns minutos", flags: 1 << 6 });
 
-            const response = await this.estimateHoursUsecase.execute(dto);
+            const responses = await this.estimateHoursUsecase.execute(dto);
+            
+            for(const response of responses) {
+                await interaction.reply({ content: response.message, flags: 1 << 6 });
+            }
 
             return interaction.followUp({
-                content: response.message,
+                content: "Fim!",
                 flags: 1 << 6,
             });
         } catch (error) {
@@ -253,10 +257,14 @@ export class TaskCommands {
 
             await interaction.reply({ content: "Isso pode levar alguns minutos.\nVou procurar a tarefa.", flags: 1 << 6 });
 
-            const response = await this.estimateTaskUsecase.execute(dto);
+            const responseArray = await this.estimateTaskUsecase.execute(dto);
+
+            for(const response of responseArray){
+                await interaction.reply({ content: response.message, flags: 1 << 6 });
+            }
 
             return interaction.followUp({
-                content: response.message,
+                content: "Fim!",
                 flags: 1 << 6,
             });
         } catch (error) {
