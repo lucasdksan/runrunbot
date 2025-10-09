@@ -12,9 +12,11 @@ import { RunrunitModule } from "../../shared/infrastructure/runrunit/runrunit.mo
 import { IAModule } from "../../shared/infrastructure/ia/ia.module";
 import { IIARepository } from "../../shared/infrastructure/ia/repositories/i-ia-repository";
 import { IAService } from "../../shared/infrastructure/ia/ia.service";
+import { DiscordModule } from "../../shared/infrastructure/discord/discord.module";
+import { DiscordService } from "../../shared/infrastructure/discord/discord.service";
 
 @Module({
-    imports: [RunrunitModule, IAModule],
+    imports: [RunrunitModule, IAModule, DiscordModule],
     controllers: [],
     providers: [
         {
@@ -38,9 +40,10 @@ import { IAService } from "../../shared/infrastructure/ia/ia.service";
             useFactory: (
                 useRepository: UserRepository.Repository,
                 runrunitRepo: IRunrunitRepository,
-                iaRepo: IIARepository
-            ) => new AnalyzePerformance.Usecase(useRepository, runrunitRepo, iaRepo),
-            inject: ["UserRepository", RunrunitService, IAService]
+                iaRepo: IIARepository,
+                discordService: DiscordService,
+            ) => new AnalyzePerformance.Usecase(useRepository, runrunitRepo, iaRepo, discordService),
+            inject: ["UserRepository", RunrunitService, IAService, DiscordService]
         },
         UserCommands,
         UserSchedules

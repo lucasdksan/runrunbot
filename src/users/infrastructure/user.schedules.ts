@@ -7,7 +7,7 @@ export class UserSchedules {
     @Inject(AnalyzePerformance.Usecase)
     private analyzePerformance: AnalyzePerformance.Usecase;
     
-    @Cron("48 23 * * *")
+    @Cron("0 14 * * 5")
     async handleMessage() {
         await this.analyzePerformance.execute();
     }
