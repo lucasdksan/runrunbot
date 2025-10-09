@@ -1,7 +1,7 @@
 import { UseCase as DefaultUseCase } from "../../../shared/application/usecases/use-case";
 import { EstimateTaskAgentText } from "../../../shared/infrastructure/templates/estimate-task-agent-text";
-import { DefaultInputDto } from "../../infrastructure/external/ia/dtos/default-input.dto";
-import { IIARepository } from "../../infrastructure/external/ia/repositories/i-ia-repository";
+import { DefaultInputDto } from "../../../shared/infrastructure/ia/dtos/default-input.dto";
+import { IIARepository } from "../../../shared/infrastructure/ia/repositories/i-ia-repository";
 import { GetTaskDto } from "../../../shared/infrastructure/runrunit/dtos/get-task.dto";
 import { IRunrunitRepository } from "../../../shared/infrastructure/runrunit/repositories/i-runrunit-repository";
 import { DefaultOutput, DefaultOutputMapper } from "../dtos/default-output.dto";

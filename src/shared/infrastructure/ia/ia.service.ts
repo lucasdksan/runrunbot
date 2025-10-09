@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { validateSync } from "class-validator";
 import { GenerateContentConfig, GoogleGenAI, ToolListUnion } from "@google/genai";
-import { EnvConfigService } from "../../../../shared/infrastructure/env-config/env-config.service";
+import { EnvConfigService } from "../env-config/env-config.service";
 import { IIARepository } from "./repositories/i-ia-repository";
 import { DefaultInputDto } from "./dtos/default-input.dto";
 
