@@ -70,7 +70,7 @@ export class UserEntity extends Entity<UserProps> {
         }
     }
 
-    static filterTask(tasks: any[], runrunId: string){
+    static filterTask(tasks: any[], runrunId: string) {
         return tasks.filter((task) => task.responsible_id === runrunId);
     }
 }

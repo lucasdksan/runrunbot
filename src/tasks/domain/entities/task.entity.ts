@@ -148,4 +148,19 @@ export class TaskEntity extends Entity<TaskProps> {
 
         return groupedByAssignee;
     }
+
+    static prepareTasksForAnalysis(tasks: any[]) {
+        return tasks.map(task => ({
+            id: task.id,
+            title: task.title,
+            current_estimate_seconds: task.current_estimate_seconds,
+            time_worked: task.time_worked,
+            estimated_start_date: task.estimated_start_date,
+            estimated_delivery_date: task.estimated_delivery_date,
+            start_date: task.start_date,
+            close_date: task.close_date,
+            is_closed: task.is_closed,
+            priority: task.priority
+        }));
+    }
 }
