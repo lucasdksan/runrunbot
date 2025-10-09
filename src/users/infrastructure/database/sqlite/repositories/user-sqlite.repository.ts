@@ -93,8 +93,14 @@ export class UserSqliteRepository implements UserRepository.Repository {
         throw new Error("Method not implemented.");
     }
 
-    findAll(): Promise<UserEntity[]> {
-        throw new Error("Method not implemented.");
+    async findAll(): Promise<UserEntity[]> {
+        const rows = await this.sqliteService.connection.all(`SELECT * FROM users`);
+
+        if (!rows || rows.length === 0) {
+            return [];
+        }
+
+        return rows.map((row: any) => UserModelMapper.toEntity(row));
     }
 
     delete(id: string): Promise<void> {

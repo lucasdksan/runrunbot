@@ -129,18 +129,23 @@ export class TaskEntity extends Entity<TaskProps> {
     }
 
     static separationResponsibleId(tasks: any[]) {
-        const groupedByResponsible = tasks.reduce((acc, item) => {
-            const { responsible_id } = item;
+        const groupedByAssignee: Record<string, any[]> = {};
 
-            if (!acc[responsible_id]) {
-                acc[responsible_id] = [];
+        for (const task of tasks) {
+            if (!Array.isArray(task.assignments)) continue;
+
+            for (const assignment of task.assignments) {
+                const { assignee_id } = assignment;
+                if (!assignee_id) continue;
+
+                if (!groupedByAssignee[assignee_id]) {
+                    groupedByAssignee[assignee_id] = [];
+                }
+
+                groupedByAssignee[assignee_id].push(task);
             }
+        }
 
-            acc[responsible_id].push(item);
-
-            return acc;
-        }, {});
-
-        return groupedByResponsible;
+        return groupedByAssignee;
     }
 }
