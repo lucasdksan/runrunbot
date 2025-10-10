@@ -1,6 +1,5 @@
 import { UseCase as DefaultUseCase } from "../../../shared/application/usecases/use-case";
 import { DiscordService } from "../../../shared/infrastructure/discord/discord.service";
-import { MessageInputDto } from "../../../shared/infrastructure/discord/dtos/message-input.dto";
 import { DiscordMessageIAModel } from "../../../shared/infrastructure/discord/models/discord-message-ia.model";
 import { DefaultInputDto } from "../../../shared/infrastructure/ia/dtos/default-input.dto";
 import { IIARepository } from "../../../shared/infrastructure/ia/repositories/i-ia-repository";
@@ -82,8 +81,6 @@ export namespace AnalyzePerformance {
                 Dados: ${JSON.stringify(tasks, null, 2)}
 
                 É de extrema importância o seu retorno não passar dos 1500 caracteres.
-
-                **Observação 1:** **NÃO GERE MAIS DE 1500 CARACTERES** .
             `;
         }
     }

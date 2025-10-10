@@ -132,7 +132,6 @@ export class TaskEntity extends Entity<TaskProps> {
         const grouped: Record<string, any[]> = {};
 
         for (const task of tasks) {
-            // tenta pegar responsible_id primeiro
             const responsibleId = task.responsible_id;
 
             if (responsibleId) {
@@ -141,7 +140,6 @@ export class TaskEntity extends Entity<TaskProps> {
                 continue;
             }
 
-            // se não tiver responsible_id, tenta pelos assignments
             if (!Array.isArray(task.assignments)) continue;
 
             for (const assignment of task.assignments) {
