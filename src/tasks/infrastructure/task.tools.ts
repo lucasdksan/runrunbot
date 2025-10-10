@@ -1,5 +1,4 @@
 import z from "zod";
-import { CallToolResult } from "@modelcontextprotocol/sdk/types";
 import { Resolver, Tool } from "@nestjs-mcp/server";
 import { IRunrunitRepository } from "../../shared/infrastructure/runrunit/repositories/i-runrunit-repository";
 import { GetDescriptionTaskDto } from "../../shared/infrastructure/runrunit/dtos/get-description-task.dto";
@@ -9,6 +8,7 @@ import { PlayTaskDto } from "../../shared/infrastructure/runrunit/dtos/play-task
 import { TaskEntity } from "../domain/entities/task.entity";
 import { GetCommentTaskDto } from "../../shared/infrastructure/runrunit/dtos/get-comment-task.dto";
 import { TurndownProvider } from "./providers/turndown/turndown.provider";
+import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 @Resolver("tasks")
 export class TaskTools {

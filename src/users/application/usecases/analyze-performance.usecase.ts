@@ -74,6 +74,8 @@ export namespace AnalyzePerformance {
                 - Quantidade de atividades
                 - Taxa de fechamento
                 - Volume total de tarefas
+
+                **OBSERVAÇÃO: ** A sua resposta deve ser usando markdown, com listas numeradas e marcadores.
             `;
 
             if (role.toLowerCase() === "dev" || role.toLowerCase() === "desenvolvedor") {
