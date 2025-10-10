@@ -61,6 +61,10 @@ export class UserEntity extends Entity<UserProps> {
         return this.props.createdAt;
     }
 
+    public getRole(){
+        return this.toJSON().runrunitUser.includes("dev") ? "dev" : "gestor";
+    }
+
     static validate(props: UserProps) {
         const validator = UserValidatorFactory.create();
         const isValid = validator.validate(props);
