@@ -1,6 +1,6 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { validateSync } from "class-validator";
-import { EnvConfigService } from "../../../../shared/infrastructure/env-config/env-config.service";
+import { EnvConfigService } from "../env-config/env-config.service";
 import { RunrunitTaskMapper } from "./models/task-model.mapper";
 import { GetTaskDto } from "./dtos/get-task.dto";
 import { GetDescriptionTaskDto } from "./dtos/get-description-task.dto";

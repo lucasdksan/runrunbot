@@ -81,7 +81,7 @@ export class TaskEntity extends Entity<TaskProps> {
         return this.turndown.convertHTMLtoMD(this.description);
     }
 
-    static publicFormatDescription(value: string){
+    static publicFormatDescription(value: string) {
         const turndown = new TurndownProvider();
 
         return turndown.convertHTMLtoMD(value);
@@ -126,5 +126,48 @@ export class TaskEntity extends Entity<TaskProps> {
 
             return stageMatch && assigneeMatch;
         });
+    }
+
+    static separationResponsibleId(tasks: any[]) {
+        const grouped: Record<string, any[]> = {};
+
+        for (const task of tasks) {
+            // tenta pegar responsible_id primeiro
+            const responsibleId = task.responsible_id;
+
+            if (responsibleId) {
+                if (!grouped[responsibleId]) grouped[responsibleId] = [];
+                grouped[responsibleId].push(task);
+                continue;
+            }
+
+            // se não tiver responsible_id, tenta pelos assignments
+            if (!Array.isArray(task.assignments)) continue;
+
+            for (const assignment of task.assignments) {
+                const { assignee_id } = assignment;
+                if (!assignee_id) continue;
+                if (!grouped[assignee_id]) grouped[assignee_id] = [];
+                grouped[assignee_id].push(task);
+            }
+        }
+
+        return grouped;
+    }
+
+
+    static prepareTasksForAnalysis(tasks: any[]) {
+        return tasks.map(task => ({
+            id: task.id,
+            title: task.title,
+            current_estimate_seconds: task.current_estimate_seconds,
+            time_worked: task.time_worked,
+            estimated_start_date: task.estimated_start_date,
+            estimated_delivery_date: task.estimated_delivery_date,
+            start_date: task.start_date,
+            close_date: task.close_date,
+            is_closed: task.is_closed,
+            priority: task.priority
+        }));
     }
 }

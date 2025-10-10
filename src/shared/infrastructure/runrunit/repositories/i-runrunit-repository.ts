@@ -1,4 +1,4 @@
-import { TaskEntity } from "../../../../domain/entities/task.entity";
+import { TaskEntity } from "../../../../tasks/domain/entities/task.entity";
 import { CreateCommentDto } from "../dtos/create-comment.dto";
 import { GetCommentTaskDto } from "../dtos/get-comment-task.dto";
 import { GetDescriptionTaskDto } from "../dtos/get-description-task.dto";

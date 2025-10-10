@@ -1,6 +1,6 @@
 import { UseCase as DefaultUseCase } from "../../../shared/application/usecases/use-case";
-import { PlayTaskDto } from "../../infrastructure/external/runrunit/dtos/play-task.dto";
-import { IRunrunitRepository } from "../../infrastructure/external/runrunit/repositories/i-runrunit-repository";
+import { PlayTaskDto } from "../../../shared/infrastructure/runrunit/dtos/play-task.dto";
+import { IRunrunitRepository } from "../../../shared/infrastructure/runrunit/repositories/i-runrunit-repository";
 
 export namespace PlayTask {
     export type Input = {
