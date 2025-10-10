@@ -113,7 +113,7 @@ export class TaskCommands {
                 flags: 1 << 6,
             });
         } catch (error) {
-            console.error("Erro ao estimar as horas: ", error);
+            console.error("Erro ao iniciar a tarefa: ", error);
             return interaction.followUp({
                 content: "Erro ao estimar tarefa",
                 flags: 1 << 6,
@@ -162,7 +162,7 @@ export class TaskCommands {
                 flags: 1 << 6,
             });
         } catch (error) {
-            console.error("Erro ao estimar as horas: ", error);
+            console.error("Erro ao pausar a tarefa: ", error);
             return interaction.followUp({
                 content: "Erro ao estimar tarefa",
                 flags: 1 << 6,
@@ -207,7 +207,7 @@ export class TaskCommands {
             const responses = await this.estimateHoursUsecase.execute(dto);
             
             for(const response of responses) {
-                await interaction.reply({ content: response.message, flags: 1 << 6 });
+                await interaction.followUp({ content: response.message, flags: 1 << 6 });
             }
 
             return interaction.followUp({
@@ -260,7 +260,7 @@ export class TaskCommands {
             const responseArray = await this.estimateTaskUsecase.execute(dto);
 
             for(const response of responseArray){
-                await interaction.reply({ content: response.message, flags: 1 << 6 });
+                await interaction.followUp({ content: response.message, flags: 1 << 6 });
             }
 
             return interaction.followUp({
@@ -268,7 +268,7 @@ export class TaskCommands {
                 flags: 1 << 6,
             });
         } catch (error) {
-            console.error("Erro ao estimar as horas: ", error);
+            console.error("Erro ao estimar as horas da tarefa: ", error);
             return interaction.followUp({
                 content: "Erro ao estimar tarefa",
                 flags: 1 << 6,
