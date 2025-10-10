@@ -129,25 +129,32 @@ export class TaskEntity extends Entity<TaskProps> {
     }
 
     static separationResponsibleId(tasks: any[]) {
-        const groupedByAssignee: Record<string, any[]> = {};
+        const grouped: Record<string, any[]> = {};
 
         for (const task of tasks) {
+            // tenta pegar responsible_id primeiro
+            const responsibleId = task.responsible_id;
+
+            if (responsibleId) {
+                if (!grouped[responsibleId]) grouped[responsibleId] = [];
+                grouped[responsibleId].push(task);
+                continue;
+            }
+
+            // se não tiver responsible_id, tenta pelos assignments
             if (!Array.isArray(task.assignments)) continue;
 
             for (const assignment of task.assignments) {
                 const { assignee_id } = assignment;
                 if (!assignee_id) continue;
-
-                if (!groupedByAssignee[assignee_id]) {
-                    groupedByAssignee[assignee_id] = [];
-                }
-
-                groupedByAssignee[assignee_id].push(task);
+                if (!grouped[assignee_id]) grouped[assignee_id] = [];
+                grouped[assignee_id].push(task);
             }
         }
 
-        return groupedByAssignee;
+        return grouped;
     }
+
 
     static prepareTasksForAnalysis(tasks: any[]) {
         return tasks.map(task => ({

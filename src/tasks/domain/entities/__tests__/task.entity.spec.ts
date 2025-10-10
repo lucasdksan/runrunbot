@@ -93,4 +93,78 @@ describe("TaskEntity unit tests", () => {
         expect(result["user-3"][0].id).toBe(4);
 
     });
+
+
+    it("deve retornar apenas os campos esperados de cada tarefa", () => {
+        const tasks = [
+            {
+                id: 1,
+                title: "Task A",
+                current_estimate_seconds: 3600,
+                time_worked: 1800,
+                estimated_start_date: "2025-10-10",
+                estimated_delivery_date: "2025-10-15",
+                start_date: "2025-10-11",
+                close_date: "2025-10-12",
+                is_closed: false,
+                priority: "Alta",
+                // campos extras que devem ser ignorados
+                description: "Should not appear",
+                assignee: "user-1",
+            },
+            {
+                id: 2,
+                title: "Task B",
+                current_estimate_seconds: 7200,
+                time_worked: 3000,
+                estimated_start_date: "2025-10-01",
+                estimated_delivery_date: "2025-10-05",
+                start_date: "2025-10-02",
+                close_date: "2025-10-06",
+                is_closed: true,
+                priority: "Média",
+            },
+        ];
+
+        const result = TaskEntity.prepareTasksForAnalysis(tasks);
+
+        expect(result).toHaveLength(2);
+
+        // Verifica que apenas os campos esperados estão presentes
+        expect(result[0]).toEqual({
+            id: 1,
+            title: "Task A",
+            current_estimate_seconds: 3600,
+            time_worked: 1800,
+            estimated_start_date: "2025-10-10",
+            estimated_delivery_date: "2025-10-15",
+            start_date: "2025-10-11",
+            close_date: "2025-10-12",
+            is_closed: false,
+            priority: "Alta",
+        });
+
+        // Garante que propriedades extras foram removidas
+        expect(result[0]).not.toHaveProperty("description");
+        expect(result[0]).not.toHaveProperty("assignee");
+
+        // Verifica o segundo item
+        expect(result[1]).toEqual({
+            id: 2,
+            title: "Task B",
+            current_estimate_seconds: 7200,
+            time_worked: 3000,
+            estimated_start_date: "2025-10-01",
+            estimated_delivery_date: "2025-10-05",
+            start_date: "2025-10-02",
+            close_date: "2025-10-06",
+            is_closed: true,
+            priority: "Média",
+        });
+    });
+
+    it("deve retornar um array vazio quando não houver tarefas", () => {
+        const result = TaskEntity.prepareTasksForAnalysis([]);
+        expect(result).toEqual([]);
+    });
 });

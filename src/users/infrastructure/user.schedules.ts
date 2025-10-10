@@ -8,7 +8,6 @@ export class UserSchedules {
     private analyzePerformance: AnalyzePerformance.Usecase;
     
     @Cron("0 14 * * 5")
-    // @Cron("30 23 * * *")
     async handleMessage() {
         await this.analyzePerformance.execute();
     }
