@@ -40,11 +40,11 @@ export namespace AnalyzePerformance {
                 dto.input = this.buildPrompt(cleanData, user.getRole());
 
                 let generateResponse = await this.iaRepo.generateResult(dto);
-                let generateResponseArray = this.iaRepo.splitTextBySentence(generateResponse, 1500);
+                let generateResponses = this.iaRepo.splitTextBySentence(generateResponse, 1500);
 
                 responseIA.push({
                     runrunitUser,
-                    generateResponses: generateResponseArray,
+                    generateResponses,
                     discordId,
                     discordUser,
                 });
