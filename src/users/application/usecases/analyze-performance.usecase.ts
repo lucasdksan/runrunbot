@@ -37,7 +37,7 @@ export namespace AnalyzePerformance {
                 let dto = new DefaultInputDto();
                 let cleanData = TaskEntity.prepareTasksForAnalysis(tasks)
 
-                dto.input = this.buildPrompt(cleanData);
+                dto.input = this.buildPrompt(cleanData, user.getRole());
 
                 let generateResponse = await this.iaRepo.generateResult(dto);
                 let generateResponseArray = this.iaRepo.splitTextBySentence(generateResponse, 1500);
@@ -54,7 +54,7 @@ export namespace AnalyzePerformance {
                 const { discordId, discordUser, generateResponses } = response;
                 const listMessages = DiscordMessageIAModel.build(discordId, discordUser, generateResponses);
 
-                for(const dtoMessage of listMessages) {
+                for (const dtoMessage of listMessages) {
                     await this.discordService.sendDM(dtoMessage);
                 }
             }
@@ -62,25 +62,76 @@ export namespace AnalyzePerformance {
             return;
         }
 
-        private buildPrompt(tasks: any[]): string {
-            return `
-                Você é um analista de produtividade. Recebeu uma lista de tarefas concluídas e em andamento.
-                Avalie o desempenho dos desenvolvedores com base nas informações a seguir:
+        private buildPrompt(tasks: any[], role: string): string {
+            const baseContext = `
+                Você é um analista de produtividade e desempenho de equipes de tecnologia.
+                Recebeu uma lista de tarefas concluídas e em andamento, e deve gerar uma análise
+                personalizada conforme o papel da pessoa avaliada (desenvolvedor ou gestor).
+                Os dados estão no formato JSON e contêm informações como:
                 - Tempo estimado vs. tempo trabalhado
                 - Cumprimento de prazos (estimated_delivery_date vs. close_date)
                 - Prioridades atendidas
                 - Quantidade de atividades
                 - Taxa de fechamento
-                - Volume total de tarefas por pessoa
+                - Volume total de tarefas
+            `;
 
-                Gere um relatório com:
-                1️⃣ Um resumo da performance de cada desenvolvedor.
-                2️⃣ Pontos fortes e fracos.
-                3️⃣ Sugestões para melhoria.
+            if (role.toLowerCase() === "dev" || role.toLowerCase() === "desenvolvedor") {
+                return `
+                    ${baseContext}
 
-                Dados: ${JSON.stringify(tasks, null, 2)}
+                    👉 **Contexto**: Este relatório é para um **desenvolvedor individual**.
+                    Analise as tarefas e gere um feedback técnico e comportamental sobre sua performance.
 
-                É de extrema importância o seu retorno não passar dos 1500 caracteres.
+                    **Objetivo da análise:**
+                    - Avaliar produtividade, foco e qualidade da entrega.
+                    - Comparar tempo estimado vs. tempo real e prazos cumpridos.
+                    - Identificar padrões de melhoria (ex: excesso de retrabalho, gargalos, ouciosidade).
+                    - Oferecer sugestões práticas de melhoria individual.
+
+                    **Estrutura esperada:**
+                    1️⃣ Resumo geral da produtividade do desenvolvedor.  
+                    2️⃣ Pontos fortes (habilidades, constância, entregas notáveis).  
+                    3️⃣ Pontos de melhoria (organização, prazos, volume de entregas).  
+                    4️⃣ Recomendações objetivas para evolução.
+
+                    **Dados para análise:**
+                    ${JSON.stringify(tasks, null, 2)}
+                `;
+            }
+
+            if (role.toLowerCase() === "gestor" || role.toLowerCase() === "manager") {
+                return `
+                    ${baseContext}
+
+                    👉 **Contexto**: Este relatório é para um **gestor de equipe**.
+                    Analise o desempenho com foco em **liderança, alocação de tarefas, eficiência da equipe e planejamento**.
+
+                    **Objetivo da análise:**
+                    - Avaliar a produtividade da equipe sob sua gestão.
+                    - Medir se o volume de trabalho está equilibrado entre os membros.
+                    - Identificar possíveis sobrecargas ou subutilização.
+                    - Avaliar a pontualidade das entregas e cumprimento de estimativas.
+                    - Oferecer insights estratégicos para melhorar a gestão da equipe.
+
+                    **Estrutura esperada:**
+                    1️⃣ Visão geral da performance da equipe.  
+                    2️⃣ Pontos fortes da gestão (organização, comunicação, priorização).  
+                    3️⃣ Riscos e oportunidades de melhoria (distribuição de tarefas, prazos, planejamento).  
+                    4️⃣ Sugestões práticas de gestão (revisão de processos, acompanhamento, coaching).
+
+                    **Dados para análise:**
+                    ${JSON.stringify(tasks, null, 2)}
+                `;
+            }
+
+            return `
+                ${baseContext}
+
+                Gere uma análise geral de produtividade e desempenho com base nas tarefas fornecidas.
+
+                **Dados:**
+                ${JSON.stringify(tasks, null, 2)}
             `;
         }
     }
