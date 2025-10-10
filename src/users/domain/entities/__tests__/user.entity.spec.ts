@@ -92,4 +92,14 @@ describe("UserEntity unit tests", () => {
         const result = UserEntity.filterTask([], "user-123");
         expect(result).toEqual([]);
     });
+
+    it("deve retonar a role do usuário como 'dev' quando runrunitUser contém 'dev'", () => {
+        const user = new UserEntity(UserDataBuilder({ runrunitUser: "dev-john" }));
+        expect(user.getRole()).toBe("dev");
+    });
+
+    it("deve retonar a role do usuário como 'gestor' quando runrunitUser não contém 'dev'", () => {
+        const user = new UserEntity(UserDataBuilder({ runrunitUser: "jane-gestor" }));
+        expect(user.getRole()).toBe("gestor");
+    });
 });
